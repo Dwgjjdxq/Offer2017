@@ -22,6 +22,22 @@ void quickSort(int *array, int left, int right) {
 	}
 }
 
+// 再次优化，将后半个递归过程换成迭代，减少栈的使用
+const int maxLengthInsertSort = 7;
+void quickSortOptimi(int * array, int left, int right) {
+	int pivot = 0;
+	if ((right - left) > maxLengthInsertSort)
+	{
+		while (left < right) {
+			pivot = partition(array, left, right);
+			quickSortOptimi(array, left, pivot - 1);
+			left = pivot + 1; // 将递归换成迭代，上步递归结束后,left不再用,效果等同于quickSortOptimi(array, pivot + 1, right);
+		}
+	}
+	/*当元素少于某个数值时，用直接插入排序算法效率更优*/
+	/*else InsertSort(array);*/ 
+}
+
 // 找到划分的位置，并将该元素放在划分位置，左边都比该元素小， 右边都比该元素大
 int partition(int *array, int left, int right) {
 	int pivot = array[left];
