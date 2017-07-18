@@ -1,101 +1,56 @@
-#include <iostream>
-#include <cstdlib>
-#include <stack>
-#include <ctime>
+#include <stdio.h>
 
-using namespace std;
+int * quickSort(int *array, int length);				// 指针函数， 划分快排
+void quickSort(int *array, int left, int right);		// 递归实现
+int partition(int *array, int left, int right);			// 划分区间， 得到每趟排序后的划分元素最终放置的位置
+void printArray(int *array, int length);				// 打印数组
 
-/*划分函数*/
-int Partition(int *A, int left, int right);
-
-/*递归实现*/
-void QuickSort1(int *A, int left, int right);
-
-/*非递归实现*/
-void QuickSort(int *A, int left, int right);
-
-void swap(int &a, int &b) {
-	int tmp = a;
-	a = b;
-	b = tmp;
+// 返回指向该数组首地址，对该数组准备进行划分
+int * quickSort(int *array, int length) {
+	if (array == NULL || length < 1)
+		return array;
+	quickSort(array, 0, length - 1);
+	return array;
 }
 
-/*划分操作---未优化版本*/
-int Partition(int *A, int low, int high) {
-
-	int pivot = A[low];			// 将当前表中的第一个元素设为枢轴值，对表进行划分
-
-	while (low < high) {
-
-		while (low < high && pivot <= A[high]) --high;
-
-		A[low] = A[high];		// 将比轴枢值小的元素移动到左端
-
-		while (low < high && pivot >= A[low]) ++low;
-
-		A[high] = A[low];		// 将比轴枢值大的元素移动到右端
-
-	}
-
-	A[low] = pivot;				// 
-
-	return low;
-}
-
-/*划分操作---优化多余的交换操作）*/
-
-int Partition1(int *A, int low, int high) {
-
-	int pivot = A[low];
-
-	while (low < high) {
-
-		while (low < high && A[high] >= pivot) --high;
-
-		swap(A[low], A[high]);
-
-		while (low < high && A[low] <= pivot) ++low;
-
-		swap(A[low], A[high]);
-	}
-	return low;
-}
-
-int *QuickSort(int *A, int n) {
-	if (A == NULL || n <= 0) {
-		return A;
-	}
-	QuickSort1(A, 0, n - 1);
-	return A;
-}
-
-/*快速排序的递归实现*/
-void QuickSort1(int *A, int left, int right) {
+// 找到中间元素的位置之后，将数组一分为二，递归进行排序
+void quickSort(int *array, int left, int right) {
 	if (left < right) {
-		int pivotpos = Partition(A, left, right);
-		QuickSort1(A, left, pivotpos - 1);
-		QuickSort1(A, pivotpos + 1, right);
+		int pos = partition(array, left, right);
+		quickSort(array, left, pos - 1);
+		quickSort(array, pos + 1, right);
 	}
 }
 
-/*快速排序的非递归实现*/
-void QuickSort2(int *A, int left, int right) {
+// 找到划分的位置，并将该元素放在划分位置，左边都比该元素小， 右边都比该元素大
+int partition(int *array, int left, int right) {
+	int pivot = array[left];
 
+	while (left < right) {
+		while (left < right && array[right] >= pivot) --right;	// 比较，符合要求就移动
+		array[left] = array[right];								// 存在异常则交换
+		while (left < right && array[left] <= pivot) ++left;
+		array[right] = array[left];
+	}//while
+	array[left] = pivot;
+	return left;
+}
+
+void printArray(int * array, int length) {
+	int index = 0;
+	printf("array: \n");
+	for (; index < length; ++index) {
+		printf(" %d,", *(array + index));
+	}
+	printf("\n\n");
 }
 
 int main() {
-	int A[] = { 5, 1, 9, 3, 7, 4, 8, 6, 2 };
+	int array[] = { 4, 2, 6, 3, 4, 8, 9, 3 };
+	int len = sizeof(array) / sizeof(array[0]);
 
-	// sizeof(A[0]) = 4, sizeof(A) = 4 * n
-
-	const int n = sizeof(A) / sizeof(A[0]);
-
-	QuickSort(A, n);
-
-	for (int i = 0; i < 9; ++i) {
-		cout << A[i] << " ";
-	}
-	cout << endl;
-	system("pause");
+	printArray(array, len);
+	int * ret = quickSort(array, len);
+	printArray(ret, len);
 	return 0;
 }
