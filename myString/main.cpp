@@ -53,6 +53,38 @@ int myStrcmp(const char * dest, const char * src) {
 		;
 	return (*dest == *src ? 0 : (*dest > *src ? 1 : -1));
 }
+
+// 首先介绍 char * strchr(const char *str, int character); 的功能
+// 在字符串str中找到character这个字符的位置，返回一个指向str中第一个出现character字符的指针，如果没有找到该字符，则返回空指针；
+// 再介绍 int strncmp(const char * str1, const char * str2, size_t num);
+// 比较str1 和 str2这两个字符串是否相等，相等字符的个数最大是num个
+// strstr功能：Returns a pointer to the first occurrence of str2 in str1, or a null pointer if str2 is not part of str1.
+// The matching process does not include the terminating null - characters, but it stops there.
+char * myStrstr(char * s1, char * s2) {
+	int n = strlen(s2);
+	for (; (s1 = strchr(s1, *s2)) != NULL; s1++) // strchr---在s1字符串中第一个出现字符*s2的位置信息赋给s1
+	{
+		if (strncmp(s1, s2, n) == 0)	// strncmp---在s1中找s2，最大字符个数是n，找完就返回s1
+			return s1;
+	}
+	return NULL;
+}
+// 细化版
+char * myStrstr_1(char * s1, char * s2) {
+	if (*s2) {
+		while (*s1) {
+			for (int i = 0; *(s1 + i) == *(s2 + i); ++i)
+			{
+				if (*(s2 + i + 1) == '\0')
+					return s1;
+			}//for
+			s2++;
+		}//while
+		return NULL;
+	}//if
+	else return NULL;
+}
+
 int main() {
 
 	// myStrlen
@@ -78,5 +110,12 @@ int main() {
 	char * ret_cat = myStrcat(buf_6, buf_7);
 	printf("ret_cat = %s\n", ret_cat);
 
+	// myStrstr
+	char buf_8[1024] = "i am a chinese man";
+	char buf_9[1024] = "chinese";
+	char * ret_Strstr = myStrstr(buf_8, buf_9);
+	strncpy(ret_Strstr, "young", 5);
+	//puts(buf_8);
+	printf("buf_8 = %s\n", buf_8);
 	return 0;
 }
