@@ -1,5 +1,4 @@
-// quicksort
-#if 0
+/****************************sorts***********************/
 #include <iostream>
 #include <cstdlib>
 #include <stack>
@@ -7,22 +6,15 @@
 
 using namespace std;
 
+/****************************1. quicksort***********************/
 /*划分函数*/
 int Partition(int *A, int left, int right);
 
 /*递归实现*/
 void QuickSort1(int *A, int left, int right);
 
-/*非递归实现*/
-void QuickSort(int *A, int left, int right);
 
-void swap(int &a, int &b) {
-	int tmp = a;
-	a = b;
-	b = tmp;
-}
-
-/*划分操作---未优化版本*/
+/*划分操作---优化版本*/
 int Partition(int *A, int low, int high) {
 
 	int pivot = A[low];			// 将当前表中的第一个元素设为枢轴值，对表进行划分
@@ -38,36 +30,18 @@ int Partition(int *A, int low, int high) {
 		A[high] = A[low];		// 将比轴枢值大的元素移动到右端
 
 	}
-
+	
 	A[low] = pivot;				// 
 
 	return low;
 }
 
-/*划分操作---优化多余的交换操作）*/
-
-int Partition1(int *A, int low, int high) {
-
-	int pivot = A[low];
-
-	while (low < high) {
-
-		while (low < high && A[high] >= pivot) --high;
-
-		swap(A[low], A[high]);
-
-		while (low < high && A[low] <= pivot) ++low;
-
-		swap(A[low], A[high]);
-	}
-	return low;
-}
 
 int *QuickSort(int *A, int n) {
 	if (A == NULL || n <= 0) {
 		return A;
 	}
-	QuickSort1(A, 0, n - 1);
+	QuickSort1(A, 0, n - 1); 
 	return A;
 }
 
@@ -80,13 +54,8 @@ void QuickSort1(int *A, int left, int right) {
 	}
 }
 
-/*快速排序的非递归实现*/
-void QuickSort2(int *A, int left, int right) {
-
-}
-
-int main() {
-	int A[] = { 5, 1, 9, 3, 7, 4, 8, 6, 2 };
+int main1() {
+	int A[] = {5, 1, 9, 3, 7, 4, 8, 6, 2};
 
 	// sizeof(A[0]) = 4, sizeof(A) = 4 * n
 
@@ -101,16 +70,8 @@ int main() {
 	system("pause");
 	return 0;
 }
-#endif
 
-// MergeSort
-#if 0
-#include <iostream>
-#include <cstdlib>
-#include <time.h>
-
-using namespace std;
-
+/****************************2. MergeSort***********************/
 /*划分总入口*/
 int *MergeSort(int *A, int n);
 
@@ -166,8 +127,8 @@ void Merge(int *A, int left, int mid, int right) {
 	delete[]tmp;
 }
 
-int main() {
-
+int main2() {
+	
 	const int N = 10;
 	int array[N];
 	srand(time(0));
@@ -190,14 +151,8 @@ int main() {
 
 	return 0;
 }
-#endif
 
-// BubbleSort
-#if 0
-#include <iostream>
-#include <cstdlib>
-
-using namespace std;
+/****************************3. BubbleSort***********************/
 
 /*大数下沉 T(n) = O(n^2) S(n)=O(1) 稳定*/
 int *BubbleSort(int *A, int n) {
@@ -221,15 +176,15 @@ int *BubbleSort(int *A, int n) {
 
 /*大数下沉的优化*/
 int *BubbleSortDev(int *A, int n) {
-
+	
 	if (n <= 0)
 		return A;
 	bool flag = true;						/*flag用来作为标记*/
 	for (int i = 0; i < n && flag; ++i) {	/*若flag为false则退出循环*/
-
+		
 		flag = false;						/*初始flag为false*/
 		for (int j = 0; j < n - i - 1; ++j) {
-
+			
 			if (A[j] > A[j + 1]) {
 				int tmp = A[j + 1];
 				A[j + 1] = A[j];
@@ -247,14 +202,14 @@ int *BubbleSortSmall(int *A, int n) {
 		return A;
 
 	for (int i = 0; i < n - 1; ++i) {
-
+		
 		for (int j = n - 1; j > i; --j) {
-
+			 
 			if (A[j] < A[j - 1]) {
 				int tmp = A[j];
 				A[j] = A[j - 1];
 				A[j - 1] = tmp;
-
+			
 			}//if
 		}//for
 	}//for
@@ -271,7 +226,7 @@ int *BubbleSortSmallDev(int *A, int n) {
 
 		flag = false;
 		for (int j = n - 1; j > i; --j) {
-
+			
 			if (A[j] < A[j - 1]) {
 				int tmp = A[j];
 				A[j] = A[j - 1];
@@ -282,13 +237,13 @@ int *BubbleSortSmallDev(int *A, int n) {
 	}//for
 }
 
-int main() {
+int main3() {
 	int A[] = { 2, 1, 4, 9, 7, 3, 8, 6 };
 	//BubbleSort(A, 8);
 	//BubbleSortDev(A, 8);
 	//BubbleSortSmall(A, 8);
 	BubbleSortSmallDev(A, 8);
-
+	
 
 	for (int i = 0; i < 8; ++i) {
 		cout << A[i] << " ";
@@ -296,17 +251,10 @@ int main() {
 	cout << endl;
 	system("pause");
 	return 0;
-}
+ }
 
-#endif
 
-/*直接插入排序*/
-#if 0
-#include <iostream>
-#include <cstdlib>
-
-using namespace std;
-
+/****************************4. 直接插入排序***********************/
 /*直接插入排序*/
 int *IntertionSort(int *A, int n) {
 	if (A == NULL || n <= 0)
@@ -340,13 +288,7 @@ int main() {
 }
 
 
-#endif
-
-/*选择排序算法*/
-#if 0
-#include <iostream>
-#include <cstdlib>
-using namespace std;
+/*****************************5. 选择排序算法************************/
 
 int *SelectionSort(int *A, int n) {
 
@@ -355,7 +297,7 @@ int *SelectionSort(int *A, int n) {
 
 	/*进行n-1趟选择，每次都从后面的n-i个中选出最小的，放到i + 1位置*/
 	for (int i = 0; i < n - 1; ++i) {
-
+		
 		/*每次选择，找到i到n - 1处最小元素位置，放在i位置*/
 		int minPos = i;
 		for (int j = i + 1; j < n; ++j) {
@@ -383,15 +325,11 @@ int main() {
 
 	return 0;
 }
-#endif
 
-// HeapSort
-#if 0
-#include <iostream>
-#include <cstdlib>
-#include <time.h>
+
+/*****************************6. 堆排序************************/
+
 #define N 10
-using namespace std;
 
 /*堆排序函数*/
 void HeapSort(int *array);
@@ -403,7 +341,7 @@ void MaxHeapify(int *array, int n);
 int HeapSize;
 
 void HeapSort(int *array) {
-
+	
 	BuildMaxHeap(array);
 
 	/*提取最大值，并重新调整堆顺序*/
@@ -413,7 +351,7 @@ void HeapSort(int *array) {
 		array[0] = t;
 		HeapSize -= 1;										// 重点注意
 		MaxHeapify(array, 1);								// 在堆中，堆顶元素下标从1开始!!!!!
-	}
+	} 
 }
 
 void BuildMaxHeap(int *array) {
@@ -423,7 +361,7 @@ void BuildMaxHeap(int *array) {
 	}
 }
 
-// 堆的下标从 1 到 N
+															// 堆的下标从 1 到 N
 void MaxHeapify(int *array, int temp) {
 	int largest;											// 以temp为顶点的子树的堆顶
 	int l = temp * 2;										// 求以temp为顶点的子树左儿子
@@ -433,14 +371,14 @@ void MaxHeapify(int *array, int temp) {
 		largest = l;
 	else
 		largest = temp;
-	// 此时最大已经换成了 largest-1 这个位置的值
+															// 此时最大已经换成了 largest-1 这个位置的值
 	if (r <= HeapSize && array[r - 1] > array[largest - 1])	// 首先判断右儿子是否存在，即r <= HeapSize
 		largest = r;
 
 	if (largest != temp) {
-		int t = array[largest - 1];
-		array[largest - 1] = array[temp - 1];
-		array[temp - 1] = t;
+		int t = array[largest-1];
+		array[largest-1] = array[temp-1];
+		array[temp-1] = t;
 		MaxHeapify(array, largest);	// 调整为大顶堆
 	}
 }
@@ -480,7 +418,7 @@ void HeapAdjust(int *A, int idx, int n) {
 	A[idx] = tmp;
 }
 
-int main() {
+int main4() {
 	// 声明一个带排序数组
 	int array[N];
 
@@ -506,7 +444,7 @@ int main() {
 	system("pause");
 
 	srand(time(0));
-
+	
 	for (int i = 0; i < N; ++i) {
 		array[i] = rand() % 101;
 	}
@@ -525,21 +463,14 @@ int main() {
 	return 0;
 }
 
-#endif
-
-// Shell Sort
-#if 1
-#include <iostream>
-#include <cstdlib>
-#include <time.h>
-using namespace std;
+/*****************************7. 希尔排序************************/
 
 void shellsort(int *array, int n) {
 	if (n < 0)
 		return;
 	int d = n;
 	while (d > 1) {
-		d = (d + 1) / 2;
+		d = (d + 1) / 2; 
 		for (int i = d; i < n; ++i) {
 
 			int tmp = array[i];
@@ -555,15 +486,14 @@ void shellsort(int *array, int n) {
 	}//while
 }
 
-int main() {
-
+int main5() {
 
 	/*
 	srand(time(0));
 	int array[10];
-
+	
 	for (int i = 0; i < 10; ++i) {
-	array[i] = rand() % 101;
+		array[i] = rand() % 101;
 	}
 	*/
 	int array[] = { 3, 9, 1, 5, 8, 3, 7, 4, 6, 2 };
@@ -580,5 +510,3 @@ int main() {
 	cout << endl;
 	system("pause");
 }
-
-#endif
