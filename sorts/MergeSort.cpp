@@ -40,7 +40,7 @@ void Merge(int * array, int left, int mid, int right) {
 	while (second <= right) tmp[index++] = array[second++];
 
 	/*将临时数组数据拷贝到原数组*/
-	for (int i = left; i <= right; ++i) array[i] = tmp[i - left];
+	for (int i = left; i <= right; ++i) array[i] = tmp[i - left]; // 此处要注意：是将tmp[i-left]赋值给array[i]
 
 	/*删除临时空间*/
 	delete[]tmp;
