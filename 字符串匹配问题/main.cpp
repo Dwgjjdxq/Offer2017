@@ -1,15 +1,18 @@
-
+/*
+	kmp算法
+*/
 #include <iostream>
 #include <vector>
 #include <string>
 using namespace std;
 
+/*构建next数组*/
 void getNext(const string & pattern, int next[]) {
 	if (pattern.empty()) return;
 	next[0] = 0;
 	int start = 0, cur = 1;
 	for (; cur < pattern.length(); ++cur) {
-		while (start > 1 && pattern[start] == pattern[cur])
+		while (start > 0 && pattern[start] != pattern[cur])
 			start = next[start - 1];
 		if (pattern[start] == pattern[cur]) ++start;
 		next[cur] = start;
@@ -32,14 +35,14 @@ int KMP(const string & text, const string & pattern) {
 		if (pi == pattern.length()) {
 			delete[]next;
 			return ti - pi + 1;
-		}
-	}
+		}//if 匹配完成
+	}//for
 	delete[]next;
 	return -1;
 }
 
 int main() {
-	string text = "acdeacdf", pattern = "acde";
+	string text = "aabaaabaaac", pattern = "aabaaac";
 	cout << KMP(text, pattern) << endl;
 	return 0;
 }
