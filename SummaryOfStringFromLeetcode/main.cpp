@@ -195,14 +195,22 @@ vector<vector<string>> groupAnagrams(vector<string>& strs) {
 }
 
 /**************************76. Minimum Window Substring最小包含模板串的长度***************/
+/*
+	 总结：
+	1. 设置两张表，一张表示字符出现次数，另一张表示字符是否出现；
+	2. 首先初始化这两张表；
+	3. 设置两个指针，均指向待查字符串，从头开始，并设置一个最小长度和最小长度的起始下标，作为记录更新
+	4. 遍历查找S，如果表中出现的字符个数还有，则进行类似于出队列操作，否则就做类似进队列操作，更新两张表
+	5. 只有当当前字符在这两张表中均表示存在，则将次数做减操作；同理，已经不存在的情况下，如果重新来到，则做加操作
+*/
 string minWindow(string s, string t) {
 	if (s.empty() || t.empty())
 		return "";
-	int require[128] = { 0 };		// 表示模式串字符出现的次数，默认为0，出现一次加一次
-	bool appearCh[128] = { false }; // 表示模式串中的字符是否出现， 默认为false，出现则为true
+	int require[128] = { 0 };		// 表示模式串字符出现的次数，默认为0，出现一次加一次---1
+	bool appearCh[128] = { false }; // 表示模式串中的字符是否出现， 默认为false，出现则为true---1
 	int count = t.size(); // 模板串字符个数
 
-	for (int i = 0; i < count; ++i) {
+	for (int i = 0; i < count; ++i) {	// 2
 		require[t[i]]++;
 		appearCh[t[i]] = true;
 	}
@@ -211,21 +219,21 @@ string minWindow(string s, string t) {
 	int minLen = INT_MAX, minIdx = 0; // minLen 表示匹配窗口大小，minIdx表示left值，但只表示最小情况下的left值
 
 	while (right < (int)s.size() && left < (int)s.size()) {
-		if (count) {
+		if (count) {	/// 类似于出栈
 			++right;
 			require[s[right]]--;	// 如果该字符不是需要的字符，则减过之后变为-1，
-			if (appearCh[s[right]] && (require[s[right]] >= 0)) {//此条件判断后表明该字符是所求字符
-				count--;
+			if (appearCh[s[right]] && (require[s[right]] >= 0)) {//此条件判断后表明该字符是所求字符； 匹配
+				count--;	//出栈
 			}
 		}
-		else {
+		else {			/// 类似于进栈
 			if (minLen > right - left + 1) {
 				minLen = right - left + 1;
 				minIdx = left;
 			}
 			require[s[left]]++;		// 类似出队列操作，根据上面的情况，如果当前字符不是所求字符，则require值重新回到0，
-			if (appearCh[s[left]] && require[s[left]] > 0) {// 只有当该字符是所求字符，才进行++count操作
-				++count;
+			if (appearCh[s[left]] && require[s[left]] > 0) {// 只有当该字符是所求字符，才进行++count操作 匹配
+				++count;	// 进栈
 			}
 			++left;
 		}//else
