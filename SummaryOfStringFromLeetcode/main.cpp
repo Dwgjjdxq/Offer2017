@@ -47,7 +47,7 @@ int lengthOfLongestSubstring(string s) {
 	return res;
 }
 
-/********************************* 28. Implement strStr()(不熟练)****************/
+/********************************* 28. Implement strStr()(非常不熟练KMP算法)****************/
 //暴力法
 int strStr(const string & str, const string & pattern) {
 	if (str.size() < pattern.size()) return -1;
@@ -79,7 +79,6 @@ vector<int> getNext(const string & pattern) {
 	}
 	return next;
 }
-
 int KMP(const string & str, const string & pattern) {
 	if (str.size() < pattern.size()) return -1;
 	if (pattern.empty()) return 0;
@@ -95,6 +94,31 @@ int KMP(const string & str, const string & pattern) {
 			return si - pi + 1;
 	}
 	return -1;
+}
+
+/********************************* 125. 有效回文串(不熟练)****************/
+/*
+Given a string, determine if it is a palindrome, considering only alphanumeric characters and ignoring cases.
+For example,
+"A man, a plan, a canal: Panama" is a palindrome.
+"race a car" is not a palindrome.
+*/
+/*
+常用函数：int isalnum(int c); // 检查c是否是字母或者数字，是则为true，否则为false
+		 int toupper(int c); // 将字符c转换为大写
+		 int tolower(int c); // 将字符c转换为小写
+*/
+bool isPalindrome(string s) {
+	if (s.empty() || s.size() == 1) return true;
+	int left = 0, right = s.size() - 1;
+	while (left <= right) {
+		if (!isalnum(s[left]))
+			++left;
+		else if (!isalnum(s[right]))
+			--right;
+		else if (toupper(s[left++]) != toupper(s[right--])) return false;
+	}
+	return true;
 }
 
 int main() {
