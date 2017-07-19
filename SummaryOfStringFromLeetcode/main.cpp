@@ -121,6 +121,35 @@ bool isPalindrome(string s) {
 	return true;
 }
 
+/*********************************345. Reverse Vowels of a String****************/
+/*
+	·­×ª×Ö·û´®ÖÐÔªÒô×ÖÄ¸µÄË³Ðò£¬ÔªÒô×ÖÄ¸£ºa e i o u
+*/
+bool isVowels(char c) {
+	if (c == 'a' || c == 'e' || c == 'i' || c == 'o' || c == 'u')
+		return true;
+	else return false;
+}
+string reverseVowels(string s) {
+	if (s.empty() || s.size() == 1) return s;
+	int left = 0, right = s.size() - 1;
+	while (left < right) {
+		if (!isVowels(tolower(s[left])))
+			++left;
+		else if (!isVowels(tolower(s[right])))
+			--right;
+		else if (isVowels(tolower(s[left])) && isVowels(tolower(s[right]))) {
+			int temp = s[left];
+			s[left] = s[right];
+			s[right] = temp;
+		}//else
+	}//while
+	return s;
+}
+
+
+
+
 int main() {
 	string s = "";
 	//cout << lengthOfLongestSubstring(s) << endl;
