@@ -48,6 +48,23 @@ int lengthOfLongestSubstring(string s) {
 }
 
 /********************************* 28. Implement strStr()(不熟练)****************/
+//暴力法
+int strStr(const string & str, const string & pattern) {
+	if (str.size() < pattern.size()) return -1;
+	if (pattern.empty()) return 0;
+
+	for (int i = 0; i < str.size(); ++i) {
+		int j = 0;
+		for (; j < pattern.size(); ++j) {
+			if (str[i + j] != pattern[j])
+				break;
+		}//for
+		if (j == pattern.size())
+			return i;
+	}//for
+	return -1;
+}
+//KMP算法
 vector<int> getNext(const string & pattern) {
 	if (pattern.empty()) return vector<int>();
 	int start = 0, cur = 1;
@@ -84,6 +101,6 @@ int main() {
 	string s = "";
 	//cout << lengthOfLongestSubstring(s) << endl;
 	string text = "aabaaabaaac", pattern = "aabaaac";
-	cout << KMP(text, pattern) << endl;
+	cout << strStr(text, pattern) << endl;
 	return 0;
 }
