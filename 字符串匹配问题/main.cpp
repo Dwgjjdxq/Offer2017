@@ -1,3 +1,20 @@
+//±©Á¦·¨
+int strStr(const string & str, const string & pattern) {
+	if (str.size() < pattern.size()) return -1;
+	if (pattern.empty()) return 0;
+
+	for (int i = 0; i < str.size(); ++i) {
+		int j = 0;
+		for (; j < pattern.size(); ++j) {
+			if (str[i + j] != pattern[j])
+				break;
+		}//for
+		if (j == pattern.size())
+			return i;
+	}//for
+	return -1;
+}
+
 /*
 	kmpËã·¨
 */
