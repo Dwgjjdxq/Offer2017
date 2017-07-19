@@ -187,18 +187,60 @@ vector<vector<string>> groupAnagrams(vector<string>& strs) {
 	for (auto a : mp) {
 		res.push_back(a.second);
 	}
-	/*
+	/* 另一种指针写法
 	for (map<string, vector<string>>::iterator iter = mp.begin(); iter != mp.end(); ++iter)
 		res.push_back(iter->second);
 	*/
 	return res;	
 }
 
+/**************************76. Minimum Window Substring最小包含模板串的长度***************/
+string minWindow(string s, string t) {
+	if (s.empty() || t.empty())
+		return "";
+	int require[128] = { 0 };		// 表示模式串字符出现的次数，默认为0，出现一次加一次
+	bool appearCh[128] = { false }; // 表示模式串中的字符是否出现， 默认为false，出现则为true
+	int count = t.size(); // 模板串字符个数
+
+	for (int i = 0; i < count; ++i) {
+		require[t[i]]++;
+		appearCh[t[i]] = true;
+	}
+
+	int left = 0, right = -1; // left、right 从0开始变量s主串，left一般直接指向匹配字符窗口的最左边那个字符，right一直遍历
+	int minLen = INT_MAX, minIdx = 0; // minLen 表示匹配窗口大小，minIdx表示left值，但只表示最小情况下的left值
+
+	while (right < (int)s.size() && left < (int)s.size()) {
+		if (count) {
+			++right;
+			require[s[right]]--;	// 如果该字符不是需要的字符，则减过之后变为-1，
+			if (appearCh[s[right]] && (require[s[right]] >= 0)) {//此条件判断后表明该字符是所求字符
+				count--;
+			}
+		}
+		else {
+			if (minLen > right - left + 1) {
+				minLen = right - left + 1;
+				minIdx = left;
+			}
+			require[s[left]]++;		// 类似出队列操作，根据上面的情况，如果当前字符不是所求字符，则require值重新回到0，
+			if (appearCh[s[left]] && require[s[left]] > 0) {// 只有当该字符是所求字符，才进行++count操作
+				++count;
+			}
+			++left;
+		}//else
+	}//while
+	return (minLen == INT_MAX) ? "" : (s.substr(minIdx, minLen));// string substr(pos, pos+len) const;
+	
+}
+
 
 int main() {
-	string s = "";
+	//string s = "";
 	//cout << lengthOfLongestSubstring(s) << endl;
 	string text = "aabaaabaaac", pattern = "aabaaac";
-	cout << strStr(text, pattern) << endl;
+	//cout << strStr(text, pattern) << endl;
+	string s = "a", t = "a";
+	cout << minWindow(s, t) << endl;
 	return 0;
 }
