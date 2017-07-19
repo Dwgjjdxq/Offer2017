@@ -40,7 +40,7 @@ int KMP(const string & text, const string & pattern) {
 	delete[]next;
 	return -1;
 }
-
+ 
 int main() {
 	string text = "aabaaabaaac", pattern = "aabaaac";
 	cout << KMP(text, pattern) << endl;
