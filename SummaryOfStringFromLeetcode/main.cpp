@@ -147,7 +147,52 @@ string reverseVowels(string s) {
 	return s;
 }
 
+/*********************************哈希表方法**************************/
+/**********************************49. Group Anagrams颠倒的字符串分组***************/
+/*
+将颠倒后的字符串分别分为一组
+Given an array of strings, group anagrams together.
 
+For example, given: ["eat", "tea", "tan", "ate", "nat", "bat"], 
+Return:
+[
+  ["ate", "eat","tea"],
+  ["nat","tan"],
+  ["bat"]
+]
+*/
+/*	// 默认字符串字符均为小写字母
+	总结：
+	1. 在一堆零散的字符串数组中将含有相同个数相同字符的字符串分为一组，考虑利用哈希思想构建一个map
+	2. 该map的key值应为排好序之后的字符串str, 对应value应是vector<string>,即一个子数组
+	3. 
+*/
+#include <map>
+vector<vector<string>> groupAnagrams(vector<string>& strs) {
+	if (strs.empty())
+		return vector<vector<string>>();
+	vector<vector<string>> res;
+
+	//sort(strs.begin(), strs.end());
+	/*利用哈希思想构建一张map映射关系， string表示表示当前字符串排好序的临时字符串， vector<string>表示存放当前原始字符串*/
+	map<string, vector<string>> mp;
+
+	for (int i = 0; i < strs.size(); ++i) {
+		string str = strs[i];
+		/*对临时字符串排序，作为map的key值， 将原始字符串作为对应value值*/
+		sort(str.begin(), str.end());
+		mp[str].push_back(strs[i]);
+	}
+	/*将map相同key对应的value数组，整合在大数组中*/
+	for (auto a : mp) {
+		res.push_back(a.second);
+	}
+	/*
+	for (map<string, vector<string>>::iterator iter = mp.begin(); iter != mp.end(); ++iter)
+		res.push_back(iter->second);
+	*/
+	return res;	
+}
 
 
 int main() {
