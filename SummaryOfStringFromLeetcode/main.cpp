@@ -17,6 +17,15 @@ using namespace std;
 对于，"bbbbb"，其无重复字符的最长子字符串为"b"，长度为1。
 */
 
+// Summary
+/*
+	1. 首先创建一个大小为256的bool类型的哈希表;
+	2. 设置两个指针，一个作为每次找到无重复字符子串的起始位置，另一个作为运动指针，向前查找当前字符是否在哈希表中;
+	3. 当当前指针所指字符已经存在，则退出循环，求出当前指针与起始指针的位置之差，并与之前得到的结果取最大;
+	4. 此时要判断一下运动指针是否已经到了字符串末端;
+	5. 如果后面还有字符，则让起始指针开始向后移动，直到找到第一次出现重复的那个字符，在此期间，将遇到的字符做剔除哈希表操作，即置为false
+	6. 找到 第一次出现重复的那个字符位置之后，将其置为false, 起始指针到下一个位置开启新一轮查找无重复字符的子串
+*/
 int lengthOfLongestSubstring(string s) {
 	if (s.empty())
 		return 0;
@@ -38,8 +47,43 @@ int lengthOfLongestSubstring(string s) {
 	return res;
 }
 
+/********************************* 28. Implement strStr()(不熟练)****************/
+vector<int> getNext(const string & pattern) {
+	if (pattern.empty()) return vector<int>();
+	int start = 0, cur = 1;
+	vector<int> next(pattern.size());
+	next[0] = 0;
+	for (; cur < pattern.size(); ++cur) {
+		while (start > 0 && pattern[cur] != pattern[start])
+			start = next[start - 1];
+		if (pattern[cur] == pattern[start])
+			start++;
+		next[cur] = start;
+	}
+	return next;
+}
+
+int KMP(const string & str, const string & pattern) {
+	if (str.size() < pattern.size()) return -1;
+	if (pattern.empty()) return 0;
+
+	int si = 0, pi = 0;
+	auto next = getNext(pattern);
+	for (; si < str.size(); ++si) {
+		while (pi > 0 && str[si] != pattern[pi])
+			pi = next[pi - 1];
+		if (str[si] == pattern[pi])
+			++pi;
+		if (pi == pattern.size())
+			return si - pi + 1;
+	}
+	return -1;
+}
 
 int main() {
-
+	string s = "";
+	//cout << lengthOfLongestSubstring(s) << endl;
+	string text = "aabaaabaaac", pattern = "aabaaac";
+	cout << KMP(text, pattern) << endl;
 	return 0;
 }
