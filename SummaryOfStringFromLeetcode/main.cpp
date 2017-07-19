@@ -242,13 +242,67 @@ string minWindow(string s, string t) {
 	
 }
 
+/**************************5. Longest Palindromic Substring 最长回文子串***************/
+/*暴力法(O(N*3))*/
+string longestPalindrome(string s) {
+	int length = s.size();
+	int maxLength = 0;
+	int start = 0;
+	for (int i = 0; i < s.size(); ++i) {
+		for (int j = i + 1; j < s.size(); ++j) {
+			int temp1, temp2;
+			for (temp1 = i, temp2 = j; temp1 < temp2; temp1++, temp2) {
+				if (s[temp1] != s[temp2])
+					break;
+			}//for
+			if (temp1 >= temp2 && j - i > maxLength) {
+				maxLength = j - i + 1;
+				start = i;
+			}//if
+		}//for
+	}//for
+	return maxLength > 0 ? s.substr(start, maxLength) : NULL;
+}
+
+/*动态规划法*/
+string longestPalindromeDP(string s) {
+	if (s.empty()) return "";
+	if (s.size() == 1) return s;
+	int maxLength = 1;
+	int len = s.size();
+	int dp[1024][1024] = { 0 };
+	int start = 0;
+	for (int i = 0; i < len; ++i) {
+		dp[i][i] = 1;
+		if (i < len - 1 && s[i] == s[i + 1]) {
+			dp[i][i + 1] = 1;
+			start = i;
+			maxLength = 2;
+		}//if
+	}//for
+
+	for (int L = 3; L <= len; ++L) {
+		for (int i = 0; i + L - 1 < len; ++i) {
+			int right = i + L - 1;
+			if (s[i] == s[right] && (dp[i + 1][right - 1] == 1)) {
+				dp[i][right] = 1;
+				maxLength = L;
+				start = i;
+			}//if
+		}//for
+	}//for
+	return (maxLength >= 1) ? s.substr(start, maxLength) : "";
+}
+
 
 int main() {
 	//string s = "";
 	//cout << lengthOfLongestSubstring(s) << endl;
-	string text = "aabaaabaaac", pattern = "aabaaac";
+	//string text = "aabaaabaaac", pattern = "aabaaac";
 	//cout << strStr(text, pattern) << endl;
-	string s = "a", t = "a";
-	cout << minWindow(s, t) << endl;
+	//string s = "a", t = "a";
+	//cout << minWindow(s, t) << endl;
+	string s = "abcdasdfghjkldcba";
+	cout << longestPalindrome(s) << endl;
 	return 0;
 }
