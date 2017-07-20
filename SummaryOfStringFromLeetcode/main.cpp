@@ -684,7 +684,20 @@ void reverseWords(string & s) {
 	}
 	s = s.substr(0, s.size() - 1); /*此处要注意！不能省略，因为在上面s += strStack.top() + ' ' 时，将会多加一个空格 ' ' */
 }
-
+/*输入流stringstream来处理*/
+#include <sstream>
+void reverseWords_1(string &s) {
+	stringstream is(s);
+	string tmp;
+	string res;
+	while (is >> tmp) {
+		if (res.empty()) {
+			res = tmp;
+		}
+		else res = tmp + ' ' + res;			/*按照这个顺序，即 (新(刚出炉) + ' ' + 老(之前已经出来了)) 可达到出栈的效果，*/
+	}
+	s = res;
+}
 
 
 
