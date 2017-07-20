@@ -650,28 +650,33 @@ vector<string> generateParenthesis(int n) {
 }
 
 /********************************151. 翻转字符串*******************************/
+/*
+	总结：
+		1. 利用栈的先进后出策略，将字符串依次入栈，但要skip首尾出现的空格及单词之间空格，以便入栈操作
+*/
 void reverseWords(string & s) {
 	if (s.empty()) return; /*当字符串只有一个字符时，要注意可能是空格，则不能直接返回，需要排除只有一个空格的字符串*/
 	/* if (s.size() == 1 && s[0] != ' ') return; */	// 可省略
 	string::iterator iter = s.begin();
-	stack<string> strStack;
-	string words;
+	stack<string> strStack;		/*申请栈*/
+	string words;				/*保存一个单词,准备入栈*/
 
-	for (; iter != s.end();) {
-		while (*iter == ' ') ++iter;
-		while (iter != s.end() && *iter != ' ') {
-			words += *iter++;
+	while (iter != s.end()) {
+		while (*iter == ' ') ++iter;				/*skip各种空格，在循环的过程中，刚开始skip串头的空格，运行过程中再skip多余的空											格，同时在最后也会skip串尾空格*/
+		while (iter != s.end() && *iter != ' ') {	/*记录一个单词*/
+			words += *iter++;						/*此处的iter++，即出现了向后移动的操作*/
 		}
-		if (!words.empty())
+		if (!words.empty())							/*存了一个单词，那就入栈*/
 			strStack.push(words);
-		words.clear();
+		words.clear();								/*单词入栈之后就及时清理临时字符串*/
+	}//while 遍历整个字符串
+
+	s.clear();										/*清空下原来的整个字符串，准备迎接栈内单词*/
+	while (!strStack.empty()) {				
+		s += strStack.top() + ' ';					/*开始迎接栈内单词，并以空格来隔开*/
+		strStack.pop();								/*remember 出栈操作*/
 	}
-	s.clear();
-	while (!strStack.empty()) {
-		s += strStack.top() + ' ';
-		strStack.pop();
-	}
-	s = s.substr(0, s.size() - 1);
+	s = s.substr(0, s.size() - 1); /*此处要注意！不能省略，因为在上面s += strStack.top() + ' ' 时，将会多加一个空格 ' ' */
 }
 
 
