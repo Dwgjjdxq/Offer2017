@@ -439,10 +439,86 @@ public:
 		}
 		/*去掉后缀空格*/
 		for (; s[i] == ' '; ++i);
+		/*状态返回*/
 		return i == s.size();
 	}
 };
 
+/**************************20. Valid Parentheses(括号匹配问题)***************/
+#include <stack>
+bool isLeft(char c) {
+	return (c == '(' || c == '[' || c == '{') ? true : false;
+}
+bool isRight(char c) {
+	return (c == ')' || c == ']' || c == '}') ? true : false;
+}
+bool isPair(char c1, char c2) {
+	return ((c1 == '(' && c2 == ')') || (c1 == '[' && c2 == ']') || (c1 == '{' && c2 == '}')) ? true : false;
+}
+bool isValid(string s){
+	if (s.empty()) return true;
+	if ((s.size() >> 1) != 0) return false; /*不是偶数个字符，直接说明不匹配*/
+	stack<char> sta;
+	for (int i = 0; i < s.size(); ++i) {
+		if (isLeft(s[i])) sta.push(s[i]);	/*该字符是左括号，入栈*/
+		else if (isRight(s[i])){			/*该字符是右括号，准备判定是否出栈*/
+			if (!sta.empty() && isPair(sta.top(), s[i])) {	/*注意 !sta.empty() 的判断,只有此时栈中有字符，才做后面匹配操作*/
+				sta.pop();
+			}
+			else return false;
+		}//else
+		else return false;
+	}
+	return sta.empty();		/*注意返回sta.empty(); 只有此时栈全部出栈，才能说明全部匹配*/
+}
+
+/*更简洁版*/ 
+bool isValid_web(string s) {
+	stack<char> sta;
+	for (int i = 0; i < s.size(); ++i) {
+		if ((s[i] == ')') && (sta.empty() || sta.top() != '(')
+			|| (s[i] == ']') && (sta.empty() || sta.top() != '[')
+			|| (s[i] == '}') && (sta.empty() || sta.top() != '{'))
+			return false;
+		else if (s[i] == '(' || s[i] == '[' || s[i] == '{')
+			sta.push(s[i]);
+		else sta.pop();
+	}
+	return sta.empty();
+}
+
+/**********************38. count and say  初始是1， 后面一次读字符个数和字符，共读n层***********/
+/*
+The count-and-say sequence is the sequence of integers with the first five terms as following:
+
+1.     1
+2.     11
+3.     21
+4.     1211
+5.     111221
+1 is read off as "one 1" or 11.
+11 is read off as "two 1s" or 21.
+21 is read off as "one 2, then one 1" or 1211.
+*/
+string countAndSay(int n) {
+	if (n <= 0)
+		return "";
+	string res = "1";
+	while (--n) {
+		string cur = "";
+
+		for (int i = 0; i < res.size(); ++i) {
+			int cnt = 1;		/*注意：cnt放在for循环中 找后面是否有相同的字符*/
+			while (i + 1 < res.size() && res[i] == res[i + 1]) {
+				++cnt; ++i;
+			}
+			cur += to_string(cnt) + res[i]; /*注意是将字符个数+字符赋给临时字符串*/
+		}
+
+		res = cur; /*更新每一层的结果*/
+	}
+	return res;
+}
 
 
 int main() {
@@ -456,8 +532,11 @@ int main() {
 	//cout << longestPalindrome(s) << endl;
 	//string s = "abbcaacdadada";
 	///cout << longestPalindromeLamacher(s) << endl;
-	string s = ".1";
-	Solution sln;
-	cout << sln.isNumber(s) << endl;
+	//string s = ".1";
+	//Solution sln;
+	//cout << sln.isNumber(s) << endl;
+	//string s = "((";
+	//cout << isValid(s) << endl;
+	cout << countAndSay(6) << endl;
 	return 0;
 }
