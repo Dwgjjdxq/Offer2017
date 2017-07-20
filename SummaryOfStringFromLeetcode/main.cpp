@@ -405,15 +405,16 @@ string longestCommonPrefix(vector<string>& strs) {
 class Solution {
 public:
 	bool isNumber(string s) {
+		/*index标记位*/
 		int i = 0;
 		/*去除前缀空格*/
 		for (; s[i] == ' '; ++i);
-		/*跳过标记号*/
+		/*跳过标记号'+'或'-'*/
 		if (s[i] == '+' || s[i] == '-') ++i;
 
 		/*有效数字中包含最多一个小数点. 至少一个整数, 否则就是无效的*/
-		int pointNum, digitNum;
-		for (pointNum = 0, digitNum = 0; s[i] >= '0' && s[i] <= '9' || s[i] == '.'; ++i) /*注意：|| s[i] == '.'*/
+		int pointNum = 0, digitNum = 0;
+		for (; s[i] >= '0' && s[i] <= '9' || s[i] == '.'; ++i) /*注意勿忘：|| s[i] == '.'*/
 		{
 			s[i] == '.' ? pointNum++ : digitNum++;
 		}
@@ -425,10 +426,11 @@ public:
 			if (s[i] == '+' || s[i] == '-') ++i;
 
 			int digitNum2 = 0;
-			for (; s[i] >= '0' && s[i] <= '9'; ++i, digitNum2++); /*注意：digitNum2++*/
+			for (; s[i] >= '0' && s[i] <= '9'; ++i, digitNum2++); /*注意勿忘：digitNum2++*/
 			if (digitNum2 < 1)
 				return false;
 		}
+		/*去掉后缀空格*/
 		for (; s[i] == ' '; ++i);
 		return i == s.size();
 	}
