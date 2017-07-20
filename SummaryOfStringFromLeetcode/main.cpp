@@ -264,36 +264,124 @@ string longestPalindrome(string s) {
 	return maxLength > 0 ? s.substr(start, maxLength) : NULL;
 }
 
-/*动态规划法*/
+/*动态规划法(递推思想)*/
+/*
+	总结：
+	1. 首先创建二维数组dp，初始化为0
+	2. 边界条件：dp[i][i] = 1, dp[i][i+1] = (s[i] == s[i+1]) ? 1 : 0
+	3. 状态转移方程：最长回文子串长度从3开始，dp[i][j] = dp[i+1][j-1] (== 1); 当s[i] == s[j]时
+*/
 string longestPalindromeDP(string s) {
 	if (s.empty()) return "";
 	if (s.size() == 1) return s;
 	int maxLength = 1;
 	int len = s.size();
-	int dp[1024][1024] = { 0 };
+	int dp[1024][1024] = { 0 }; // 1
 	int start = 0;
+	/*边界*/
 	for (int i = 0; i < len; ++i) {
-		dp[i][i] = 1;
-		if (i < len - 1 && s[i] == s[i + 1]) {
+		dp[i][i] = 1;    // 2 单个元素对应的dp为1
+		if (i < len - 1 && s[i] == s[i + 1]) { //2 相邻两个元素相同时，dp[i][i+1] = 1
 			dp[i][i + 1] = 1;
 			start = i;
 			maxLength = 2;
 		}//if
 	}//for
-
-	for (int L = 3; L <= len; ++L) {
-		for (int i = 0; i + L - 1 < len; ++i) {
-			int right = i + L - 1;
-			if (s[i] == s[right] && (dp[i + 1][right - 1] == 1)) {
-				dp[i][right] = 1;
+	/*状态转移方程*/
+	for (int L = 3; L <= len; ++L) {	// 子串长度
+		for (int left = 0; left + L - 1 < len; ++left) { // 子串起始地址
+			int right = left + L - 1;					 // 子串结束地址   然后向中间靠拢
+			if (s[left] == s[right] && (dp[left + 1][right - 1] == 1)) { // 3.只要前后相等，并且上一层dp也相等，则回文构成
+				dp[left][right] = 1;	// 3
 				maxLength = L;
-				start = i;
+				start = left;
 			}//if
 		}//for
 	}//for
 	return (maxLength >= 1) ? s.substr(start, maxLength) : "";
 }
 
+/*lamacher算法（拉马车算法O(N)）*/
+/*
+	总结
+	1. 首先预处理将原字符串处理为 在字符串首尾及字符间各插入一个字符'#'，为避免越界，在开始处插入一个其他字符'$',尾部是以'\0'结尾
+	2. 
+*/
+#if 0
+const int maxn = 3e5; // 字符串最大空间 1e5 = 100000, 3e5 = 300000
+char str[maxn], newStr[maxn];// s 存放原始字符串， str 存放变化后的数据
+int len1, len2, p[maxn], ans; // len1表示原始字符串长度，len2表示变换后的字符串长度，
+							  // p[maxn] 表示当前字符的最长回文串长度,ans 表示最长回文串结果
+/*预处理*/ 
+void init() {
+	newStr[0] = '$';
+	newStr[1] = '#';
+	for (int i = 0; i < len1; ++i) {
+		newStr[2 * i + 2] = str[i];
+		newStr[2 * i + 3] = '#';
+	}
+	len2 = len1 * 2 + 2;
+	newStr[len2] = '\0';
+}
+void manacher(){
+	int id = 0, mx = 0;	// id表示回文串中心，mx表示以id为中心的最长回文串的右边界
+	for (int i = 1; i < len2; ++i) {
+		/*核心代码，求出p[i]*/
+		if (i < mx) 
+			p[i] = min(p[2 * id - i], mx - i);
+		else p[i] = 1;
+
+		/*当i位置的回文串大小超过了mx，则后面暴力计算求回文串长度*/
+		for (; newStr[i + p[i]] == newStr[i - p[i]]; p[i]++);
+
+		// 更新id,mx值
+		if (p[i] + i > mx) {
+			mx = p[i] + i;
+			id = i;
+		}//if
+
+		ans = max(ans, p[i] - 1);	// 因为字符串翻倍，所以 p[i]-1 即为原始字符串当前位置回文串长度
+	}//for
+}
+// 求最长回文串长度
+int main_lamacher() {
+	while (scanf("%s", str) != EOF) {
+		len1 = strlen(str);
+		init();
+		manacher();
+		cout << ans << endl;
+	}
+	return 0;
+}
+#endif
+
+/*求最长回文串字符串*/
+string longestPalindromeLamacher(string s) {
+	/*预处理*/
+	string newS = "$#";
+	for (int i = 0; i < s.size(); ++i) {
+		newS += s[i]; newS += '#';
+	}
+	
+	int p[300000] = { 0 }, id = 0, mx = 0, resId = 0, resMx = 0;
+	for (int i = 0; i < newS.size(); ++i) {
+		/*核心代码 p[i] 表示变形后字符串中以i为中心的回文串的半径*/
+		p[i] = (i < mx) ? min(p[2 * id - i], mx - i) : 1; 
+		/*暴力匹配i超过mx后面的*/
+		while (newS[i + p[i]] == newS[i - p[i]]) ++p[i];
+		/*更新当前回文串的 半径mx 和 中心点id */
+		if (mx < (i + p[i])) {
+			mx = i + p[i];
+			id = i;
+		}
+		/*更新最长回文串的 半径resMx 和 中心点resId*/
+		if (resMx < p[i]) {
+			resMx = p[i];	
+			resId = i;
+		}
+	}
+	return s.substr((resId - resMx) / 2, resMx - 1);
+}
 
 int main() {
 	//string s = "";
@@ -302,7 +390,9 @@ int main() {
 	//cout << strStr(text, pattern) << endl;
 	//string s = "a", t = "a";
 	//cout << minWindow(s, t) << endl;
-	string s = "abcdasdfghjkldcba";
-	cout << longestPalindrome(s) << endl;
+	//string s = "abcdasdfghjkldcba";
+	//cout << longestPalindrome(s) << endl;
+	string s = "abbcaacdadada";
+	cout << longestPalindromeLamacher(s) << endl;
 	return 0;
 }
