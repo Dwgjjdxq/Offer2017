@@ -30,7 +30,7 @@ void getNext(const string & pattern, int next[]) {
 	int start = 0, cur = 1;
 	for (; cur < pattern.length(); ++cur) {
 		while (start > 0 && pattern[start] != pattern[cur])
-			start = next[start - 1];
+			start = next[start - 1];	// 公共前后缀的前缀的最后一位
 		if (pattern[start] == pattern[cur]) ++start;
 		next[cur] = start;
 	}//for
