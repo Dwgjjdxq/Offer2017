@@ -531,7 +531,7 @@ int lengthOfLastWord(string s) {
 	return cnt;
 }
 
-/**********************二进制字符串求和(非常不熟悉)*****************/
+/**********************67.大数求和(二进制)(非常不熟悉)*****************/
 string addBinary(string a, string b) {
 	if (a.empty()) return b;
 	if (b.empty()) return a;
@@ -577,6 +577,48 @@ string addBinary(string a, string b) {
 
 }
 
+/**********************43.大数的乘积*****************/
+string multiply(string num1, string num2) {
+	if (num1.empty() || num2.empty() || num1 == "0" || num2 == "0")
+		return "0";
+	int len1 = num1.size(), len2 = num2.size();
+	string res(len1 + len2, '0');
+	reverse(num1.begin(), num1.end());
+	reverse(num2.begin(), num2.end());
+
+	int carry = 0;
+	int j = 0; // i:num1, j:num2
+	//int k = 0;	// k: 保留结果下标，k+j：保留不同层的下标。每一层的k都是从0开始，用j来向右移动
+	while (j < len2) {
+		int i = 0;
+		while (i < len1) {
+			carry += res[i + j] - '0' + (num1[i] - '0') * (num2[j] - '0');
+			res[i + j] = (carry) % 10 + '0'; /*余位*/  /*用carry % 10来取余数*/
+			carry /= 10; /*进位*/
+			++i;
+		}//每一层乘积的结果
+		while (carry) {
+			res[i + j] = carry % 10 + '0'; /*余位*/	/*用carry % 10来取余数*/
+			carry /= 10; ++i;			   /*进位*/
+		}
+		++j;	// 到下一层，指向num2的光标向右移动一位
+	}
+	
+	string::iterator iter = res.end()-1;
+	while (*iter == '0') {
+		res.erase(iter--);
+	}
+	/*
+	for (int i = res.size() - 1; i >= 0; --i) {
+		if (res[i] != '0')
+			break;
+		else res.pop_back();
+	}*/
+	reverse(res.begin(), res.end());
+	return res;
+	
+}
+
 
 int main() {
 	//string s = "";
@@ -595,7 +637,9 @@ int main() {
 	//string s = "((";
 	//cout << isValid(s) << endl;
 	//cout << countAndSay(6) << endl;
-	string s = "hello world ";
-	cout << lengthOfLastWord(s) << endl;
+	//string s = "hello world ";
+	//cout << lengthOfLastWord(s) << endl;
+	string num1 = "1", num2 = "1";
+	cout << multiply(num1, num2) << endl;
 	return 0;
 }
