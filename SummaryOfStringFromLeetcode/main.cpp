@@ -619,6 +619,64 @@ string multiply(string num1, string num2) {
 	
 }
 
+/**********************22. 给一个整数n，求n对小括号的所有组合情况(回朔法backtracking)*****************/
+/*
+Given n pairs of parentheses, write a function to generate all combinations of well-formed parentheses.
+For example, given n = 3, a solution set is:
+[
+"((()))","(()())","(())()","()(())","()()()"
+]
+	总结：
+		1. 定义left和right分别记录'(' 和')'剩余出现的次数；
+		2. 初步假设'('还可以出现n次，而')'还可出现0次；
+		3. 回溯计算，当左右括号出现的次数为均为0次时，说明已经结束，将目前存的括号放进去；
+		4. 当'('还可以出现时，即left>0,则将左括号入栈，即left -1, 但此时根据对应原则，此时记录')'的right+1,表示对应需要的次数
+		4. 当')'还需要出现时，即right>0,则将右括号入栈，即right - 1
+*/
+
+void backtracking(vector<string> & res, string tmp, int left, int right) {
+	if (left == 0 && right == 0) {
+		res.push_back(tmp);
+		return;
+	}
+	if (left > 0) backtracking(res, tmp + '(', left - 1, right + 1);/*入一个'(',即left -1 ,相应的再增加一个记录right+1*/
+	if (right > 0) backtracking(res, tmp + ')', left, right - 1);
+}
+vector<string> generateParenthesis(int n) {
+	if (n < 0) return vector<string>();
+	vector<string> res;
+	string tmp = "";
+	backtracking(res, tmp, n, 0);	/*注意此时')'暂时不需要，动态地看'('入栈情况，入一个'(',相应的再增加一个记录right*/
+}
+
+/********************************151. 翻转字符串*******************************/
+void reverseWords(string & s) {
+	if (s.empty()) return; /*当字符串只有一个字符时，要注意可能是空格，则不能直接返回，需要排除只有一个空格的字符串*/
+	/* if (s.size() == 1 && s[0] != ' ') return; */	// 可省略
+	string::iterator iter = s.begin();
+	stack<string> strStack;
+	string words;
+
+	for (; iter != s.end();) {
+		while (*iter == ' ') ++iter;
+		while (iter != s.end() && *iter != ' ') {
+			words += *iter++;
+		}
+		if (!words.empty())
+			strStack.push(words);
+		words.clear();
+	}
+	s.clear();
+	while (!strStack.empty()) {
+		s += strStack.top() + ' ';
+		strStack.pop();
+	}
+	s = s.substr(0, s.size() - 1);
+}
+
+
+
+
 
 int main() {
 	//string s = "";
@@ -639,7 +697,10 @@ int main() {
 	//cout << countAndSay(6) << endl;
 	//string s = "hello world ";
 	//cout << lengthOfLastWord(s) << endl;
-	string num1 = "1", num2 = "1";
-	cout << multiply(num1, num2) << endl;
+	//string num1 = "1", num2 = "1";
+	//cout << multiply(num1, num2) << endl;
+	string s = " ";
+	reverseWords(s);
+	//cout << s << "12" << endl;
 	return 0;
 }
