@@ -9,7 +9,7 @@ Summary of String from Leetcode
 using namespace std;
 
 /**********************利用哈希表或者双指针类型*******************************/
-/************3. Longest Substring Without Repeating Characters(不熟练)****************/
+/************3. Longest Substring Without Repeating Characters最长无重复字符的子串(不熟练)****************/
 /*
 题目：最长无重复字符的子串
 样例
@@ -383,6 +383,59 @@ string longestPalindromeLamacher(string s) {
 	return s.substr((resId - resMx) / 2, resMx - 1);
 }
 
+/**************************14. 最长公共前缀***************/
+/*
+	总结：如果发现第一个字符串strs[0]的某个字符strs[0][j](j从0号开始查看)与后面所有的字符串对应字符不相等时，
+		 就说明不会有更长的共同前缀.
+*/
+string longestCommonPrefix(vector<string>& strs) {
+	if (strs.empty()) return "";
+	const int lensOfStrs = strs.size();
+	
+	for (int j = 0; j < strs[0].size(); ++j) {
+		for (int i = 1; i < lensOfStrs; ++i) {
+			if (strs[0][j] != strs[i][j])
+				return strs[0].substr(0, j);
+		}//for
+	}//for
+	return strs[0];
+}
+
+/**************************65. 有效数字***************/
+class Solution {
+public:
+	bool isNumber(string s) {
+		int i = 0;
+		/*去除前缀空格*/
+		for (; s[i] == ' '; ++i);
+		/*跳过标记号*/
+		if (s[i] == '+' || s[i] == '-') ++i;
+
+		/*有效数字中包含最多一个小数点. 至少一个整数, 否则就是无效的*/
+		int pointNum, digitNum;
+		for (pointNum = 0, digitNum = 0; s[i] >= '0' && s[i] <= '9' || s[i] == '.'; ++i) /*注意：|| s[i] == '.'*/
+		{
+			s[i] == '.' ? pointNum++ : digitNum++;
+		}
+		if (pointNum > 1 || digitNum < 1) return false;
+
+		/*遇到e||E，后面可以紧跟一个'+'或'-'，然后再次开始计算digit的个数，必须大于一个*/
+		if (s[i] == 'e' || s[i] == 'E') {
+			++i;
+			if (s[i] == '+' || s[i] == '-') ++i;
+
+			int digitNum2 = 0;
+			for (; s[i] >= '0' && s[i] <= '9'; ++i, digitNum2++); /*注意：digitNum2++*/
+			if (digitNum2 < 1)
+				return false;
+		}
+		for (; s[i] == ' '; ++i);
+		return i == s.size();
+	}
+};
+
+
+
 int main() {
 	//string s = "";
 	//cout << lengthOfLongestSubstring(s) << endl;
@@ -392,7 +445,10 @@ int main() {
 	//cout << minWindow(s, t) << endl;
 	//string s = "abcdasdfghjkldcba";
 	//cout << longestPalindrome(s) << endl;
-	string s = "abbcaacdadada";
-	cout << longestPalindromeLamacher(s) << endl;
+	//string s = "abbcaacdadada";
+	///cout << longestPalindromeLamacher(s) << endl;
+	string s = ".1";
+	Solution sln;
+	cout << sln.isNumber(s) << endl;
 	return 0;
 }
