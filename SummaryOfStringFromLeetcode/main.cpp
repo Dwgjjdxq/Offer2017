@@ -520,6 +520,63 @@ string countAndSay(int n) {
 	return res;
 }
 
+/**********************58. 字符串中最后一个单词的长度***********/
+int lengthOfLastWord(string s) {
+	if (s.empty()) return 0;
+	int cnt = 0;
+	int index = s.size() - 1;
+	for (; s[index] == ' '; --index);
+	for (; index >= 0 && s[index] != ' '; --index)	/*注意勿忘： index >= 0  否则 将会出现负值，负值就会出现ffffffff有32位*/
+		++cnt;
+	return cnt;
+}
+
+/**********************二进制字符串求和(非常不熟悉)*****************/
+string addBinary(string a, string b) {
+	if (a.empty()) return b;
+	if (b.empty()) return a;
+
+	int i = a.size() - 1, j = b.size() - 1;
+
+	int carry = 0; /*进位*/
+	string res = ""; /*余数*/
+
+	while (i >= 0 && j >= 0) {
+		/*
+		核心句： 保留位 += (上一层的进位 + 当前两位之和) % 2;
+				进位   =  (上一层的进位 + 当前两位之和) / 2;
+		res += (carry + (a[i] - '0') + (b[j] - '0')) % 2 + '0';
+		carry = (carry + (a[i] - '0') + (b[j] - '0')) << 1;
+		*/
+		
+		carry += (a[i] - '0') + (b[j] - '0');	/*表示：上一层的进位 + 当前两位之和*/
+		res += ((carry % 2) + '0');				/*保留位*/
+		carry /= 2;								/*进位*/
+		--i; --j;								/*移位*/
+	}
+
+	/*a还有余位*/
+	while (i >= 0) {
+		carry += (a[i] - '0');
+		res += (carry % 2) + '0';
+		carry /= 2;
+		--i;
+	}
+	/*b还有余位*/
+	while (j >= 0) {
+		carry += (b[j] - '0');
+		res += (carry % 2) + '0';
+		carry /= 2;
+		--j;
+	}
+	/*进位有余位*/
+	if (carry) res += '1';
+	/*注意需要翻转，因为之前res是向后++*/
+	reverse(res.begin(), res.end());
+	return res;
+
+}
+
 
 int main() {
 	//string s = "";
@@ -537,6 +594,8 @@ int main() {
 	//cout << sln.isNumber(s) << endl;
 	//string s = "((";
 	//cout << isValid(s) << endl;
-	cout << countAndSay(6) << endl;
+	//cout << countAndSay(6) << endl;
+	string s = "hello world ";
+	cout << lengthOfLastWord(s) << endl;
 	return 0;
 }
