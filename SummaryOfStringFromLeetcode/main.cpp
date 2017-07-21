@@ -196,6 +196,14 @@ vector<vector<string>> groupAnagrams(vector<string>& strs) {
 
 /**************************76. Minimum Window Substring最小包含模板串的长度***************/
 /*
+	Given a string S and a string T, find the minimum window in S which will contain all the characters in T in complexity O(n).
+
+	For example,
+	S = "ADOBECODEBANC"
+	T = "ABC"
+	Minimum window is "BANC".
+*/
+/*
 	 总结：
 	1. 设置两张表，一张表示字符出现次数，另一张表示字符是否出现；
 	2. 首先初始化这两张表；
@@ -305,9 +313,10 @@ string longestPalindromeDP(string s) {
 /*
 	总结
 	1. 首先预处理将原字符串处理为 在字符串首尾及字符间各插入一个字符'#'，为避免越界，在开始处插入一个其他字符'$',尾部是以'\0'结尾
-	2. 
+
 */
-#if 0
+#if 1
+/*最长回文串子串的长度*/
 const int maxn = 3e5; // 字符串最大空间 1e5 = 100000, 3e5 = 300000
 char str[maxn], newStr[maxn];// s 存放原始字符串， str 存放变化后的数据
 int len1, len2, p[maxn], ans; // len1表示原始字符串长度，len2表示变换后的字符串长度，
@@ -362,25 +371,29 @@ string longestPalindromeLamacher(string s) {
 	for (int i = 0; i < s.size(); ++i) {
 		newS += s[i]; newS += '#';
 	}
-	
+	/*newS += '*'; 设置边界，首位不同即可,可省略*/
 	int p[300000] = { 0 }, id = 0, mx = 0, resId = 0, resMx = 0;
 	for (int i = 0; i < newS.size(); ++i) {
+
 		/*核心代码 p[i] 表示变形后字符串中以i为中心的回文串的半径*/
 		p[i] = (i < mx) ? min(p[2 * id - i], mx - i) : 1; 
+
 		/*暴力匹配i超过mx后面的*/
 		while (newS[i + p[i]] == newS[i - p[i]]) ++p[i];
+
 		/*更新当前回文串的 半径mx 和 中心点id */
 		if (mx < (i + p[i])) {
 			mx = i + p[i];
 			id = i;
 		}
+
 		/*更新最长回文串的 半径resMx 和 中心点resId*/
 		if (resMx < p[i]) {
 			resMx = p[i];	
 			resId = i;
 		}
 	}
-	return s.substr((resId - resMx) / 2, resMx - 1);
+	return s.substr((resId - resMx) / 2, resMx - 1); /*因为之前间隔插入'#' '$' 全部更新为偶数个*/
 }
 
 /**************************14. 最长公共前缀***************/
@@ -508,7 +521,7 @@ string countAndSay(int n) {
 		string cur = "";
 
 		for (int i = 0; i < res.size(); ++i) {
-			int cnt = 1;		/*注意：cnt放在for循环中 找后面是否有相同的字符*/
+			int cnt = 1;		/*注意：cnt放在for循环中 找后面是否有相同 的字符*/
 			while (i + 1 < res.size() && res[i] == res[i + 1]) {
 				++cnt; ++i;
 			}
@@ -525,13 +538,14 @@ int lengthOfLastWord(string s) {
 	if (s.empty()) return 0;
 	int cnt = 0;
 	int index = s.size() - 1;
-	for (; s[index] == ' '; --index);
+	for (; s[index] == ' '; --index);	/*删除串尾的空格*/
 	for (; index >= 0 && s[index] != ' '; --index)	/*注意勿忘： index >= 0  否则 将会出现负值，负值就会出现ffffffff有32位*/
 		++cnt;
 	return cnt;
 }
 
 /**********************67.大数求和(二进制)(非常不熟悉)*****************/
+/*总结参见下一题 大数乘法*/
 string addBinary(string a, string b) {
 	if (a.empty()) return b;
 	if (b.empty()) return a;
@@ -543,8 +557,8 @@ string addBinary(string a, string b) {
 
 	while (i >= 0 && j >= 0) {
 		/*
-		核心句： 保留位 += (上一层的进位 + 当前两位之和) % 2;
-				进位   =  (上一层的进位 + 当前两位之和) / 2;
+		核心句原型： 保留位 += (上一层的进位 + 当前两位之和) % 2;
+					进位   =  (上一层的进位 + 当前两位之和) / 2;
 		res += (carry + (a[i] - '0') + (b[j] - '0')) % 2 + '0';
 		carry = (carry + (a[i] - '0') + (b[j] - '0')) << 1;
 		*/
@@ -571,13 +585,26 @@ string addBinary(string a, string b) {
 	}
 	/*进位有余位*/
 	if (carry) res += '1';
-	/*注意需要翻转，因为之前res是向后++*/
+	/*注意需要翻转，因为之前res起始是后面，又是向后++*/
 	reverse(res.begin(), res.end());
 	return res;
 
 }
 
 /**********************43.大数的乘积*****************/
+/*
+	总结： 
+		1. 核心思想：每一次相乘要先得出当前位产生的总和，再求余位，随后更新进位，作为下一层计算总和的一部分
+		2. 首先判空与判零；
+		3. 申请空间(大小为两个字符串大小之和，以便足够大)
+		4. 翻转两个字符串，方便对其计算
+		5. 指向第二个字符串的j作为整体向右移动的控制变量，指向第一个字符串的i作为每一层从0到串尾参与运算的位置
+		6. 参与当前位计算总和包括有"当前位原有数据"+"当前位相乘数据"+"上一步求得的进位数据"
+		7. 然后更新余位和进位
+		8. 将多余的进位全部更新入坑
+		9. 最后记得移除掉多申请的空间
+		10. 最终翻转字符串，得到最终结果
+*/
 string multiply(string num1, string num2) {
 	if (num1.empty() || num2.empty() || num1 == "0" || num2 == "0")
 		return "0";
@@ -586,15 +613,14 @@ string multiply(string num1, string num2) {
 	reverse(num1.begin(), num1.end());
 	reverse(num2.begin(), num2.end());
 
-	int carry = 0;
-	int j = 0; // i:num1, j:num2
-	//int k = 0;	// k: 保留结果下标，k+j：保留不同层的下标。每一层的k都是从0开始，用j来向右移动
+	int carry = 0;	/*进位*/
+	int j = 0; // j:num2 用j来控制该层结果整体向右移动
 	while (j < len2) {
-		int i = 0;
+		int i = 0;		/*每一层的i都是从0开始*/
 		while (i < len1) {
-			carry += res[i + j] - '0' + (num1[i] - '0') * (num2[j] - '0');
+			carry += res[i + j] - '0' + (num1[i] - '0') * (num2[j] - '0'); /*先计算出当前位参与运算的总和*/
 			res[i + j] = (carry) % 10 + '0'; /*余位*/  /*用carry % 10来取余数*/
-			carry /= 10; /*进位*/
+			carry /= 10; /*更新进位*/
 			++i;
 		}//每一层乘积的结果
 		while (carry) {
@@ -604,7 +630,7 @@ string multiply(string num1, string num2) {
 		++j;	// 到下一层，指向num2的光标向右移动一位
 	}
 	
-	string::iterator iter = res.end()-1;
+	string::iterator iter = res.end() - 1;	/*删除尾部申请的多余的'0'*/
 	while (*iter == '0') {
 		res.erase(iter--);
 	}
@@ -660,6 +686,7 @@ vector<string> generateParenthesis(int n) {
 		6. 出栈的过程中记得每次出栈之后要加上一个' '.来分割单词
 		7. 最后，将最后出栈后出现的多余的分隔符' ' 去除掉，用substr(0, s.size() - 1)。
 */
+/*方法一：栈处理*/
 void reverseWords(string & s) {
 	if (s.empty()) return; /*当字符串只有一个字符时，要注意可能是空格，则不能直接返回，需要排除只有一个空格的字符串*/
 	/* if (s.size() == 1 && s[0] != ' ') return; */	// 可省略
@@ -684,7 +711,7 @@ void reverseWords(string & s) {
 	}
 	s = s.substr(0, s.size() - 1); /*此处要注意！不能省略，因为在上面s += strStack.top() + ' ' 时，将会多加一个空格 ' ' */
 }
-/*输入流stringstream来处理*/
+/*方法二：输入流stringstream来处理*/
 #include <sstream>
 void reverseWords_1(string &s) {
 	stringstream is(s);
