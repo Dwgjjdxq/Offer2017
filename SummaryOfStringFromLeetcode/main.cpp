@@ -726,6 +726,44 @@ void reverseWords_1(string &s) {
 	s = res;
 }
 
+/********************************美图搜狐面试题：查找字符串s2在字符串s1中的位置*******************************/
+/*	
+	题目： 有两个字符串s1和s2，写一个函数实现在s1中查找s2的初始位置。要求不区分大小写
+		  不存在则返回-1
+*/
+/*
+	总结：
+		1. 首先判断临界情况，是否为空、长度比较；
+		2. 初始化初始位置 -1；
+		3. 双重循环依次查找
+		4. 循环中的判断条件是
+			-当两个指针的长度之和等于或超过了第一个字符串，说明后面肯定会更多的不匹配
+			-如果不存在字符相等或者+-32（即换成相同的大小写之和）也不相等，就直接break重新判断
+			-当然，如果出现了第二个指针指向了第二个字符串的末尾，就返回此时此刻的第一个指针所指的位置,
+			 因为是j在动，i没动，但比较的时候是i+j与j进行的比较，所以，i不用每一步都动。
+*/
+int subStrPos(char * s1, char * s2) {
+	//if (s1 == NULL || s2 == NULL) return -1;
+	int len1 = strlen(s1), len2 = strlen(s2);
+	if (len1 < len2) return -1;
+	int pos = -1;
+	int i, j;
+	for (i = 0; i < len1; ++i) {
+		for (j = 0; j < len2; ++j) {
+			if (i + j >= len1)	// i循环到末端还没找到，导致剩下的字符串数目比s2长度短，肯定不会再有相同的
+				return -1;
+			if ((s1[i+j] != s2[j]) && (s1[i+j] != s2[i] - 32) && (s1[i+j] != s2[i] + 32))	//比较的时候i+j与j的位置进行比较的
+				break;
+			if (j == (len2 - 1))	// j所引到len2的最后，辨明前面字符都符合，记录下此时s1的索引位置即为相应的结果
+			{
+				pos = i;
+			}
+		}//for
+		
+	}//for
+	return pos;
+}
+
 
 
 
@@ -750,8 +788,11 @@ int main() {
 	//cout << lengthOfLastWord(s) << endl;
 	//string num1 = "1", num2 = "1";
 	//cout << multiply(num1, num2) << endl;
-	string s = " ";
-	reverseWords(s);
+	//string s = " ";
+	//reverseWords(s);
+	char *s1 = "abcd";
+	char *s2 = "bc";
+	cout << subStrPos(s1, s2) << endl;
 	//cout << s << "12" << endl;
 	return 0;
 }
