@@ -742,7 +742,8 @@ void reverseWords_1(string &s) {
 			-当然，如果出现了第二个指针指向了第二个字符串的末尾，就返回此时此刻的第一个指针所指的位置,
 			 因为是j在动，i没动，但比较的时候是i+j与j进行的比较，所以，i不用每一步都动。
 */
-int subStrPos(char * s1, char * s2) {
+
+int subStrPos_1(char * s1, char * s2) {
 	//if (s1 == NULL || s2 == NULL) return -1;
 	int len1 = strlen(s1), len2 = strlen(s2);
 	if (len1 < len2) return -1;
@@ -750,13 +751,14 @@ int subStrPos(char * s1, char * s2) {
 	int i, j;
 	for (i = 0; i < len1; ++i) {
 		for (j = 0; j < len2; ++j) {
-			if (i + j >= len1)	// i循环到末端还没找到，导致剩下的字符串数目比s2长度短，肯定不会再有相同的
-				return -1;
-			if ((s1[i+j] != s2[j]) && (s1[i+j] != s2[i] - 32) && (s1[i+j] != s2[i] + 32))	//比较的时候i+j与j的位置进行比较的
+			if ((i + j) >= len1)	// i循环到末端还没找到，导致剩下的字符串数目比s2长度短，肯定不会再有相同的
+				return -1; 
+			if (tolower(s1[i+j]) != tolower(s2[j]))	//比较的时候i+j与j的位置进行比较的，要用tolower或toupper
 				break;
 			if (j == (len2 - 1))	// j所引到len2的最后，辨明前面字符都符合，记录下此时s1的索引位置即为相应的结果
 			{
 				pos = i;
+				return pos;
 			}
 		}//for
 		
@@ -764,6 +766,24 @@ int subStrPos(char * s1, char * s2) {
 	return pos;
 }
 
+
+//鲁棒的写法
+int subStrPos(char *s1, char *s2) {
+	int pos = -1;
+	if (*s2) {
+		while (*s1) {
+			for (int i = 0; *(s1 + i) == *(s2 + i); ++i) {
+				if (*(s2 + i + 1) == '\0') {
+					return pos + 1;
+				}//if
+			}//for
+			++pos;
+			++s1;
+		}//while
+		return -1;
+	}//if
+	else return -1;
+}
 
 
 
@@ -790,9 +810,9 @@ int main() {
 	//cout << multiply(num1, num2) << endl;
 	//string s = " ";
 	//reverseWords(s);
-	char *s1 = "abcd";
-	char *s2 = "bc";
-	cout << subStrPos(s1, s2) << endl;
+	char *s1 = "i am a chinese man";
+	char *s2 = "m";
+	cout << subStrPos_1(s1, s2) << endl;
 	//cout << s << "12" << endl;
 	return 0;
 }
