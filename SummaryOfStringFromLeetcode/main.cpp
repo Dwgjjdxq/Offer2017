@@ -767,7 +767,7 @@ int subStrPos_1(char * s1, char * s2) {
 }
 
 
-//鲁棒的写法
+//另一种鲁棒的写法
 int subStrPos(char *s1, char *s2) {
 	int pos = -1;
 	if (*s2) {
