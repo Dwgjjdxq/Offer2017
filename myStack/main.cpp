@@ -15,7 +15,7 @@ public:
 	第i次操作：先取stackA栈顶元素，记为tmp，之前已有i-1个元素完成反转，只需要把栈顶的N-i+1个元素转移到stackB，接着把tmp和stackB的N-i+1依次压入stackA中。
 	注意：第N次操作时，因为前面N-1次操作已完成，而此时的栈顶就是初始的栈底，故第N次操作不需要做。总的过程只需要N-1次操作。
 	*/
-	/*利用两个栈，翻转期中一个栈*/
+	/* 1. 利用两个栈，翻转期中一个栈*/
 	void ReverseStack(stack<int> &A, stack<int>&B) {
 		if (A.empty())
 			return;
@@ -37,7 +37,6 @@ public:
 			}//while B
 		}// for
 	}//ReverseStack
-
 	void TestReverseStack() {
 		stack<int> A;
 		stack<int> B;
@@ -55,6 +54,8 @@ public:
 		}//while
 		cout << endl;
 	}
+	
+
 };
 
 int main() {
