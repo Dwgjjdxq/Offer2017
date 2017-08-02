@@ -1,3 +1,8 @@
+/*
+	单例模式要求：
+		1. 保证一个类只有一个实例，并提供一个全局访问点
+		2. 禁止拷贝或赋值
+*/
 #include <iostream>
 using namespace std;
 
