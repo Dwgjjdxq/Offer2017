@@ -11,12 +11,13 @@ public:
 		return instance_;
 	}
 
-	 // 自身无法完成析构，存在内存泄漏风险；此处用一个嵌套类，利用对象的确定性析构来释放。
+	 // 自身无法完成析构，存在内存泄漏风险；
 	~mySingleton()
 	{
 		cout << "~mySingleton()" << endl;
 	}
 
+	// 此处用一个嵌套类，利用对象的确定性析构来释放。
 	class Garbo{
 	public:
 		~Garbo()
