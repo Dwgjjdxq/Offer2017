@@ -57,6 +57,7 @@ void HeapSort(int arr[], int length) {
 		maxHeap(arr, curPos, length - 1);	// length - 1 为二叉树中实际的标号最大值
 	}
 
+	/*循环替换堆顶元素与最后一个元素(一直更新pos - 1),并重新调整堆*/
 	for (int pos = length - 1; pos > 0; --pos) {
 		swap(arr[0], arr[pos]);
 		maxHeap(arr, 0, pos - 1);
