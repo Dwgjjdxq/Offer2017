@@ -251,14 +251,44 @@ public:
 			std::cout << s2.top()->val << " ";
 			s2.pop();
 		}// while
-
 	}//PostOrder_NonRecursive_1
 
+	/*层次遍历二叉树*/
+	void LevelOrder(TreeNode* root) {
+		if (!root)
+			return;
+		std::queue<TreeNode*> que;
+		que.push(root);
+		std::vector<int> res;
+
+		while (!que.empty()) {
+			int sz = que.size();
+			for (int i = 0; i < sz; ++i) {
+				TreeNode* tmp = que.front();
+				que.pop();
+				res.push_back(tmp->val);
+				if (tmp->left)
+					que.push(tmp->left);
+				if (tmp->right)
+					que.push(tmp->right);
+			}
+		}
+		PrintVec(res);
+	}
+
+	void PrintVec(const std::vector<int> &res) {
+		if (res.empty())
+			return;
+		for (auto ele : res) {
+			std::cout << ele << " ";
+		}
+		std::cout << std::endl;
+	}
 };
 
 int main() {
 	myTree tree;
-	std::vector<int> nums = { 9, 6, 13, 4, 8, 12, flag, flag, flag, flag };
+	std::vector<int> nums = { 9, 6, 13, 4, 8, 12, flag, flag, flag, 7, flag, flag, flag };
 	TreeNode* root = tree.generateTree(nums);
 
 	std::cout << "递归前序遍历：" << std::endl;
@@ -280,6 +310,8 @@ int main() {
 	std::cout << std::endl << "非递归后序遍历1：" << std::endl;
 	tree.PostOrder_NonRecursive_1(root);
 	std::cout << std::endl;
+	std::cout << "非递归层次遍历：" << std::endl;
+	tree.LevelOrder(root);
 	
 	return 0;
 }
