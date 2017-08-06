@@ -284,34 +284,51 @@ public:
 		}
 		std::cout << std::endl;
 	}
+
+	void Test(TreeNode* root) {
+		std::cout << "第 " << times << " 次测试！" << std::endl;
+		std::cout << std::endl << "递归前序遍历：" << std::endl;
+		preOrder(root);
+		std::cout << std::endl << "非递归1前序遍历：" << std::endl;
+		preOrder_NonRecursive_1(root);
+		std::cout << std::endl << "非递归2前序遍历：" << std::endl;
+		preOrder_NonRecursive_2(root);
+		std::cout << std::endl << "非递归3前序遍历：" << std::endl;
+		preOrder_NonRecursive_3(root);
+		std::cout << std::endl << "递归中序遍历：" << std::endl;
+		InOrder(root);
+		std::cout << std::endl << "非递归中序遍历：" << std::endl;
+		InOrder_NonRecursive_1(root);
+		std::cout << std::endl << "递归后序遍历：" << std::endl;
+		PostOrder(root);
+		std::cout << std::endl << "非递归后序遍历：" << std::endl;
+		PostOrder_Noncursive(root);
+		std::cout << std::endl << "非递归后序遍历1：" << std::endl;
+		PostOrder_NonRecursive_1(root);
+		std::cout << std::endl;
+		std::cout << "非递归层次遍历：" << std::endl;
+		LevelOrder(root);
+		std::cout << "------------------------------" << std::endl;
+		++times;
+	}
+	static int times;
 };
+
+int myTree::times = 1;
 
 int main() {
 	myTree tree;
-	std::vector<int> nums = { 9, 6, 13, 4, 8, 12, flag, flag, flag, 7, flag, flag, flag };
-	TreeNode* root = tree.generateTree(nums);
-
-	std::cout << "递归前序遍历：" << std::endl;
-	tree.preOrder(root);
-	std::cout << std::endl << "非递归1前序遍历：" << std::endl;
-	tree.preOrder_NonRecursive_1(root);
-	std::cout << std::endl << "非递归2前序遍历：" << std::endl;
-	tree.preOrder_NonRecursive_2(root); 
-	std::cout << std::endl << "非递归3前序遍历：" << std::endl;
-	tree.preOrder_NonRecursive_3(root);
-	std::cout << std::endl << "递归中序遍历：" << std::endl;
-	tree.InOrder(root);
-	std::cout << std::endl << "非递归中序遍历：" << std::endl;
-	tree.InOrder_NonRecursive_1(root);
-	std::cout << std::endl << "递归后序遍历：" << std::endl;
-	tree.PostOrder(root);
-	std::cout << std::endl << "非递归后序遍历：" << std::endl;
-	tree.PostOrder_Noncursive(root);
-	std::cout << std::endl << "非递归后序遍历1：" << std::endl;
-	tree.PostOrder_NonRecursive_1(root);
-	std::cout << std::endl;
-	std::cout << "非递归层次遍历：" << std::endl;
-	tree.LevelOrder(root);
+	std::vector<int> nums1 = { 9, 6, 13, 4, 8, 12, flag, flag, flag, 7, flag, flag, flag };
+	TreeNode* root1 = tree.generateTree(nums1);
+	std::vector<int> nums2 = {};
+	TreeNode* root2 = tree.generateTree(nums2);
+	std::vector<int> nums3 = { 1, 2, flag, 3, flag, 4, flag, 5, flag, 6, flag, 7, flag, flag, flag };
+	TreeNode* root3 = tree.generateTree(nums3);
+	
+	tree.Test(root1);
+	tree.Test(root2);
+	tree.Test(root3);
+	
 	
 	return 0;
 }
