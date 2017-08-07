@@ -69,7 +69,7 @@ char * myStrstr(char * s1, char * s2) {
 	}
 	return NULL;
 }
-// 细化版
+// 细化版 暴力法
 char * myStrstr_1(char * s1, char * s2) {
 	if (*s2) {
 		while (*s1) {
@@ -78,11 +78,33 @@ char * myStrstr_1(char * s1, char * s2) {
 				if (*(s2 + i + 1) == '\0')
 					return s1;
 			}//for
-			s2++;
+			s1++;
 		}//while
 		return NULL;
 	}//if
 	else return NULL;
+}
+
+//C++版本 暴力法
+#include <iostream>
+int strStr(std::string str, std::string pattern) {
+	//int len1 = strlen(str.c_str()), len2 = strlen(str.c_str()); // c_str() 返回一个指向数组的指针，并以'\0'结尾，即转为C形式
+	int lenStr = str.length(), lenPattern = pattern.length();
+	if (lenStr < lenPattern) return -1;
+	if (lenPattern == 0) return 0;
+
+	int i = 0, j = 0;
+	while (i < lenStr && j < lenPattern) {
+		if (str[i] == pattern[j]) {
+			++i; ++j;
+		}
+		else {
+			i = j - i + 1; 
+			j = 0;
+		}//else
+	}//while
+
+	return (j == lenPattern) ? (i - lenPattern) : -1;
 }
 
 int main() {
@@ -120,4 +142,23 @@ int main() {
 	return 0;
 
 
+}
+/*添加 字符串分割函数strtok 的使用方法*/
+char *strtok(char *s, char *delim); // 里面有静态变量,所以下一次开始是从NULL删除的那个位置开始
+/*
+功能：分解字符串为一组字符串。s 为要分解的字符串，delim 为分隔符字符串。
+说明：首次调用时，s 指向要分解的字符串，之后再次调用要把 s 设成 NULL。
+strtok 在 s 中查找包含在 delim 中的字符并用 NULL('\0')来替换，直到找遍整个字
+符串。
+返回值：从 s 开头开始的一个个被分割的串。当没有被分割的串时则返回 NULL。
+所有 delim 中包含的字符都会被滤掉，并将被滤掉的地方设为一处分割的节点。
+*/
+int main1() {
+	char buf[] = "aaaaaaaa&bbbbbbbbbb*ccccccccccc@ddddddd";
+	char delim[] = "&*@";
+	char *p = strtok(buf, delim);
+	while (p) {
+		printf("&s\n", p);
+		p = strtok(NULL, delim);
+	}
 }
