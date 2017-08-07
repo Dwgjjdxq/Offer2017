@@ -5,6 +5,12 @@ void quickSort(int *array, int left, int right);		// 递归实现
 int partition(int *array, int left, int right);			// 划分区间， 得到每趟排序后的划分元素最终放置的位置
 void printArray(int *array, int length);				// 打印数组
 
+void swap(int &a, int &b) {
+	a ^= b;
+	b ^= a;
+	a ^= b;
+}
+
 // 返回指向该数组首地址，对该数组准备进行划分
 int * quickSort(int *array, int length) {
 	if (array == NULL || length < 1)
@@ -21,6 +27,17 @@ void quickSort(int *array, int left, int right) {
 		quickSort(array, pos + 1, right);
 	}
 }
+
+/*-----------------采用循环，减少一次递归，缩减堆栈深度，提高整体性能---------------*/
+void quickSortLoop(int *arr, int left, int right) {
+	int pos = 0;
+	while (left < right) {
+		pos = partitionOptim(arr, left, right);
+		quickSortLoop(arr, left, pos - 1);
+		left = pos + 1;
+	}
+}
+/*-----------------------------------------------------------------------------*/
 
 // 再次优化，将后半个递归过程换成迭代，减少栈的使用
 const int maxLengthInsertSort = 7;
@@ -52,6 +69,66 @@ int partition(int *array, int left, int right) {
 	return left;
 }
 
+/*------------------------三数取中法优化partition的选取------------------------*/
+int partitionOptim(int *array, int left, int right) {
+
+	int mid = (left + right) >> 1;
+
+	if (array[left] > array[right])		/*比较左右，保证左边较小*/
+		swap(array[left], array[right]);
+	if (array[mid] > array[right])		/*比较中右，保证中间较小*/
+		swap(array[mid], array[right]);
+	if (array[mid] > array[left])		/*比较中左，保证坐标较小*/
+		swap(array[mid], array[left]);
+
+	/*此方法比随机选取的效率要高，而且具有可靠性；当数据量很大时，可考虑九数取中法优化partition*/
+	int pivot = array[left];
+
+	while (left < right) {
+		while (left < right && array[right] >= pivot) --right;
+		array[left] = array[right];
+		while (left < right && array[left] <= pivot) ++left;
+		array[right] = array[left];
+	}
+	array[left] = pivot;
+	return left;
+}
+/*------------------------------------------------------------------------------*/
+
+/*------------------------利用栈：非递归quicksort-------------------------------------*/
+#include <stack>
+void quickSortNonRecursive(int *arr, int left, int right) {
+	std::stack<int> sta;
+	
+	if (left < right) {
+		int pos = partitionOptim(arr, left, right);
+		if (left < pos - 1) {
+			sta.push(left);
+			sta.push(pos - 1);
+		}
+		if (pos + 1 < right) {
+			sta.push(pos + 1);
+			sta.push(right);
+		}
+		/*利用栈来保存每一个待排序子串的首尾元素下标，下一次while循环时取出这个范围，对这段子序列进行partition操作*/
+		while (!sta.empty()) {
+			int q = sta.top();
+			sta.pop();
+			int p = sta.top();
+			sta.pop();
+			pos = partitionOptim(arr, p, q);
+			if (p < pos - 1) {
+				sta.push(p);
+				sta.push(pos - 1);
+			}
+			if (pos + 1 < q) {
+				sta.push(pos + 1);
+				sta.push(q);
+			}
+		}//while
+	}//if
+}
+/*-----------------------------------------------------------------------------------*/
 void printArray(int * array, int length) {
 	int index = 0;
 	printf("array: \n");
