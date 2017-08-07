@@ -5,6 +5,7 @@ void quickSort(int *array, int left, int right);		// 递归实现
 int partition(int *array, int left, int right);			// 划分区间， 得到每趟排序后的划分元素最终放置的位置
 void printArray(int *array, int length);				// 打印数组
 
+/*优化swap交换函数*/
 void swap(int &a, int &b) {
 	a ^= b;
 	b ^= a;
