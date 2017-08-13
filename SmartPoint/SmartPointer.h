@@ -9,7 +9,7 @@ namespace DTLib
 		T* m_pointer;	// 成员变量，原生的指针
 	public:
 		/*初始化的构造函数*/
-		SmartPointer(T* p = NULL) {
+		explicit SmartPointer(T* p = NULL) {
 			m_pointer = p;
 		}
 
