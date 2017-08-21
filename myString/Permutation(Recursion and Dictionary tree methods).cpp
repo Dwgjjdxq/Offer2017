@@ -67,10 +67,10 @@ void my_permutation(char* str, char* beg) {
 }
 
 /*字符串全排列_递归_去掉重复*/
-bool NonDuplication(char* beg, char* end) {
+bool NonDuplication(char* beg, char* end) {		// 在[beg, end)区间中是否有字符与下标为end的字符相等
 	char* ch = beg;
 	while (ch != end) {
-		if (beg == end)
+		if (*beg == *end)
 			return false;
 		++ch;
 	}
@@ -81,14 +81,14 @@ void PermutationNonDuplication(char* str, char* beg) {
 		cout << str << endl;
 	}
 	else {
-		for (char* ch = beg; *ch != '\0'; ++ch) {
+		for (char* ch = beg; *ch != '\0'; ++ch) {	// 从第beg个数分别与它后面的数字交换就能得到新的排列
 			if (NonDuplication(beg, ch)) {
 				swap(*ch, *beg);		// 此处交换的是*ch与*beg,不是ch 与 beg
 				PermutationNonDuplication(str, beg + 1);
 				swap(*ch, *beg);
-			}
-		}
-	}
+			} //if
+		}//for
+	}//else
 }
 void PermutationNonDuplication(char* str){
 	if (str == nullptr)
@@ -108,7 +108,7 @@ int main()
 	my_permutation(str1);
 	cout << endl;
 	
-	char str2[] = "abc";
+	char str2[] = "aac";
 	PermutationNonDuplication(str2);
 
 	return 0;
