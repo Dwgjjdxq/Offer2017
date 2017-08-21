@@ -52,20 +52,19 @@ void Combination(char *str) {
 /*
 	总结：
 		假设一共有n个字符，则可能的组合结果一共有2^n-1种。
-		例如：输入abc,则可以用3个位来表示，从右到左的每一位分别用来表示a、b、c，该位为1表示去该元素，该位为0表示不取该元素。
+		例如：输入abc,则可以用3个位来表示，从右到左的每一位分别用来表示a、b、c，该位为1表示选取该元素，该位为0表示不选取该元素。
 		例如：组合a表示001,组合b表示010,组合ac表示101，组合abc表示111。000不代表任何组合。所以一共有2^n-1种组合。
 		因此从1开始循环到2^n-1种。输出每个值所代表的组合即可。
 */
 void Combination2(char *str) {
 	if (str == nullptr)
 		return;
-	int j, tmp;
 	int length = strlen(str);
 	int n = 1 << length;
-	for (int i = 1; i < n; ++i) {	// 2^n-1种情况
-		for (j = 0; j < length; ++j) {	// 取长度+j时，默认从0开始,按位判断
-			if (i & (1 << j))		// 例如i=011,则j同过for循环依次取0和1，011 & 1 == 1； 011 & 10 == 1。两种取值。即ab
-				cout << *(str + j);
+	for (int bitmap = 1; bitmap < n; ++bitmap) {	// 2^n-1种情况
+		for (int offset = 0; offset < length; ++offset) {	// 取长度+j时，默认从0开始,按位判断
+			if (bitmap & (1 << offset))	// 例如i=011,则j同过for循环依次取0和1，011 & 1 == 1； 011 & 10 == 1。两种取值。即ab
+				cout << *(str + offset);
 		}
 		cout << endl;
 	}
