@@ -59,13 +59,12 @@ void Combination(char *str) {
 void Combination2(char *str) {
 	if (str == nullptr)
 		return;
-	int i, j, tmp;
+	int j, tmp;
 	int length = strlen(str);
 	int n = 1 << length;
-	for (i = 1; i < n; ++i) {
-		for (j = 0; j < length; ++j) {
-			tmp = i;
-			if (tmp & (1 << j))
+	for (int i = 1; i < n; ++i) {	// 2^n-1种情况
+		for (j = 0; j < length; ++j) {	// 取长度+j时，默认从0开始,按位判断
+			if (i & (1 << j))		// 例如i=011,则j同过for循环依次取0和1，011 & 1 == 1； 011 & 10 == 1。两种取值。即ab
 				cout << *(str + j);
 		}
 		cout << endl;
