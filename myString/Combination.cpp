@@ -5,16 +5,15 @@ using namespace std;
 
 /*
 	未排除重复的情况
-	递归---C(n,m)表示求长度为n的字符串中m个字符的组合，即为C(n,1),C(n,2)...C(n, n)的总和。
-	从第一个字符开始扫描，每个字符都有两种情况，要么被选中，即递归求解C(n - 1, m - 1);
-	要么不被选中，即递归求解C(n - 1, m)。两种情况，n的值都会减少，递归的终止条件n==0或m==0
+	从头到尾扫描字符串得到第一个字符，针对第一个字符，有两种选择
+	1.把这个字符放到数组中去，接下来我们需要在剩下的n-1个字符中选取m-1个字符;
+	2.如果不把这个字符放到组合中去，则需要在剩下的n-1个字符中选取m个字符;
+	其中 n---字符串长度  m---当前字符串组合个数
 */
 
 /*从一个字符串中选m个元素*/
 void CombinationCore(char *str, int m, vector<char>& res) {
-	/*字符串为空，或者长度达不到m*/
-	if (str == NULL || (*str == '\0' && m != 0))
-		return;
+	
 	/*已经push了m个元素，输出组合*/
 	if (m == 0) {
 		static int cnt = 0;
@@ -25,11 +24,16 @@ void CombinationCore(char *str, int m, vector<char>& res) {
 		cout << endl;
 		return;
 	}
+	if (*str == '\0')
+		return;
 
+	//	把这个字符放到组合中去，接下来我们需要在剩下的n-1个字符中选取m-1个字符
 	res.push_back(*str);
-	CombinationCore(str + 1, m - 1, res);
+	CombinationCore(str + 1, m - 1, res);	
+
+	//	不把这个字符放到数组中去，则需要在剩下的n-1个字符中选取m个字符
 	res.pop_back();
-	CombinationCore(str + 1, m, res);
+	CombinationCore(str + 1, m, res);		
 }
 
 void Combination(char *str) {
@@ -39,13 +43,39 @@ void Combination(char *str) {
 	int len = strlen(str);
 	for (int m = 1; m <= len; ++m) {
 		vector<char> res;
-		CombinationCore(str, m, res);
+		CombinationCore(str, m, res);		//	选取m个字符作为组合
 	}
+}
+
+/*位图思想*/
+/*
+	总结：
+		假设一共有n个字符，则可能的组合结果一共有2^n-1种。
+		例如：输入abc,则可以用3个位来表示，从右到左的每一位分别用来表示a、b、c，该位为1表示去该元素，该位为0表示不取该元素。
+		例如组合a表示001,组合b表示010,组合ac表示101，组合abc表示111。000不代表任何组合。所以一共有2^n-1种组合。
+		因此从1开始循环到2^n-1种。输出每个值所代表的组合即可。
+*/
+void Combination2(char *str) {
+	if (str == nullptr)
+		return;
+	int i, j, tmp;
+	int length = strlen(str);
+	int n = 1 << length;
+	for (i = 1; i < n; ++i) {
+		for (j = 0; j < length; ++j) {
+			tmp = i;
+			if (tmp & (1 << j))
+				cout << *(str + j);
+		}
+		cout << endl;
+	}
+	
 }
 
 int main() {
 	char str[20];
 	cin >> str;
 	Combination(str);
+	Combination2(str);
 	return 0;
 }
