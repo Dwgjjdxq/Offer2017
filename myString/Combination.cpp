@@ -60,15 +60,14 @@ void Combination2(char *str) {
 	if (str == nullptr)
 		return;
 	int length = strlen(str);
-	int n = 1 << length;
-	for (int bitmap = 1; bitmap < n; ++bitmap) {	// 2^n-1种情况
-		for (int offset = 0; offset < length; ++offset) {	// 取长度+j时，默认从0开始,按位判断
-			if (bitmap & (1 << offset))	// 例如i=011,则j同过for循环依次取0和1，011 & 1 == 1； 011 & 10 == 1。两种取值。即ab
+	int n = 1 << length;	// 2^n
+	for (int bitmap = 1; bitmap < n; ++bitmap) {	// 从1开始，共2^n-1种情况, 
+		for (int offset = 0; offset < length; ++offset) {	// 对1取偏移量offset时，默认从0开始,按位判断
+			if (bitmap & (1 << offset))	//bitmap=011,则j同过for循环依次取0和1，011 & 1 == 1； 011 & 10 == 1。两个取值。即ab
 				cout << *(str + offset);
 		}
 		cout << endl;
 	}
-	
 }
 
 int main() {
