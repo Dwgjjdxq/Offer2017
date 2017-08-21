@@ -1,7 +1,7 @@
 #include <iostream>
 using namespace std;
 
-/*字典树法(by july)*/
+/*字符串全排列_非递归_字典树法_去重复(by july)*/
 /*
 	总结：(二找、一交换、一翻转)
 	1. 找到排列中最后(最右)一个升序的首位位置lastIncrease;
@@ -44,7 +44,7 @@ bool my_next_permutation(char * str, int num) {
 	return true;
 }
 
-/*字符串全排列_递归*/
+/*字符串全排列_递归_不去重复*/
 void my_permutation(char* str, char* beg);
 
 void my_permutation(char* str) {
@@ -70,7 +70,7 @@ void my_permutation(char* str, char* beg) {
 bool NonDuplication(char* beg, char* end) {		// 在[beg, end)区间中是否有字符与下标为end的字符相等
 	char* ch = beg;
 	while (ch != end) {
-		if (*beg == *end)
+		if (*ch == *end)
 			return false;
 		++ch;
 	}
@@ -98,10 +98,10 @@ void PermutationNonDuplication(char* str){
 
 int main()
 {
-	char str[] = "abc";
+	char str[] = "abc";	// 字符数组以'\0'结尾
 	do{
 		cout << str << endl;
-	} while (my_next_permutation(str, 3));
+	} while (my_next_permutation(str, strlen(str)));
 	cout << endl;
 
 	char str1[] = "abc";
