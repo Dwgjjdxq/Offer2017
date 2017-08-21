@@ -66,16 +66,50 @@ void my_permutation(char* str, char* beg) {
 	}//if-else
 }
 
+/*字符串全排列_递归_去掉重复*/
+bool NonDuplication(char* beg, char* end) {
+	char* ch = beg;
+	while (ch != end) {
+		if (beg == end)
+			return false;
+		++ch;
+	}
+	return true;
+}
+void PermutationNonDuplication(char* str, char* beg) {
+	if (*beg == '\0') {
+		cout << str << endl;
+	}
+	else {
+		for (char* ch = beg; *ch != '\0'; ++ch) {
+			if (NonDuplication(beg, ch)) {
+				swap(*ch, *beg);		// 此处交换的是*ch与*beg,不是ch 与 beg
+				PermutationNonDuplication(str, beg + 1);
+				swap(*ch, *beg);
+			}
+		}
+	}
+}
+void PermutationNonDuplication(char* str){
+	if (str == nullptr)
+		return;
+	PermutationNonDuplication(str, str);
+}
+
 int main()
 {
 	char str[] = "abc";
 	do{
 		cout << str << endl;
 	} while (my_next_permutation(str, 3));
-	
 	cout << endl;
+
 	char str1[] = "abc";
 	my_permutation(str1);
+	cout << endl;
+	
+	char str2[] = "abc";
+	PermutationNonDuplication(str2);
 
 	return 0;
 }
