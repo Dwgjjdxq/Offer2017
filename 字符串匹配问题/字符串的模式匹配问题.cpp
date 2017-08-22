@@ -2,7 +2,9 @@
 #include <memory>
 using namespace std;
 /*字符串的模式匹配问题*/
-
+/*
+http://blog.csdn.net/v_july_v/article/details/7041827
+*/
 /*暴力匹配法(朴素字符串匹配算法) O(mn)*/
 int ViolentMatch(char* P, char* S) {
 	int lenP = strlen(P);
