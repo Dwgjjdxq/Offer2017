@@ -10,40 +10,40 @@ void swap(int &a, int &b) {
 
 void Print(int ColumnIndex[], int QueueSize) {
 	printf("%d: ", cnt);
-	for (int row = 0; row < QueueSize; ++row) {
-		printf("%d\t", ColumnIndex[row]);
+	for (int index = 0; index < QueueSize; ++index) {
+		printf("%d\t", ColumnIndex[index]);
 	}
 	printf("\n");
 }
 
 bool check(int ColumnIndex[], int QueueSize){
-	for (int row = 0; row < QueueSize; ++row) {
-		for (int col = row + 1; col < QueueSize; ++col) {
-			if (row - col == ColumnIndex[row] - ColumnIndex[col]
-				|| col - row == ColumnIndex[row] - ColumnIndex[col])
+	for (int i = 0; i < QueueSize; ++i) {
+		for (int j = i + 1; j < QueueSize; ++j) {
+			if (i - j == ColumnIndex[i] - ColumnIndex[j]
+				|| j - i == ColumnIndex[i] - ColumnIndex[j])
 				return false;
 		}//for-col
 	}//for-row
 	return true;
 }
 
-void PermutationQueue(int ColumnIndex[], int QueueSize, int row) {
-	if (row == QueueSize) {
+void PermutationQueue(int ColumnIndex[], int QueueSize, int index) {
+	if (index == QueueSize) {
 		if (check(ColumnIndex, QueueSize)) {
 			++cnt;
 			Print(ColumnIndex, QueueSize);
 		}//if
 	}//if
 	else {
-		for (int i = row; i < QueueSize; ++i) {
+		for (int i = index; i < QueueSize; ++i) {
 			int temp = ColumnIndex[i];
-			ColumnIndex[i] = ColumnIndex[row];
-			ColumnIndex[row] = temp;
-			PermutationQueue(ColumnIndex, QueueSize, row + 1);
+			ColumnIndex[i] = ColumnIndex[index];
+			ColumnIndex[index] = temp;
+			PermutationQueue(ColumnIndex, QueueSize, index + 1);
 
 			temp = ColumnIndex[i];
-			ColumnIndex[i] = ColumnIndex[row];
-			ColumnIndex[row] = temp;
+			ColumnIndex[i] = ColumnIndex[index];
+			ColumnIndex[index] = temp;
 		}//for
 	}//else
 }
@@ -58,8 +58,8 @@ void Queue() {
 	}
 
 	// 对一维数组进行排列组合，计算出所有的情况。
-	int row = 0;
-	PermutationQueue(ColumnIndex, QueueSize, row);
+	int index = 0;
+	PermutationQueue(ColumnIndex, QueueSize, index);
 }
 
 int main() {
