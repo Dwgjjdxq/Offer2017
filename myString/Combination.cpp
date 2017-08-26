@@ -25,6 +25,7 @@ void CombinationCore(char *str, int m, vector<char>& res) {
 		cout << endl;
 		return;
 	}
+	//字符取完，就可以返回了
 	if (*str == '\0')
 		return;
 
