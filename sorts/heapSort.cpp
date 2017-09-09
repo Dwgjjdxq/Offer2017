@@ -23,10 +23,10 @@ void swap(int &a, int &b) {
 */
 void maxHeap(int *arr, int curPos, int length) {
 	int temp = arr[curPos];
-	int maxPos = (curPos << 1) + 1;	// 代表curPos的左子树结点
+	// int maxPos = (curPos << 1) + 1;	// 代表curPos的左子树结点, 此句需放在for循环内，否则无法更新maxpos位置信息继续更新下去
 
 	/*左右子结点总是将最大的与temp比较，temp已经暂时保存起来了，直到出现temp最大，或者已经没有子结点为止*/
-	for (; maxPos <= length; maxPos = 2 * maxPos + 1) {		/* maxPos = maxPos * 2 + 1,即重新进入子结点的比较 */
+	for (int maxPos = (curPos << 1) + 1; maxPos <= length; maxPos = 2 * maxPos + 1) {		/* maxPos = maxPos * 2 + 1,即重新进入子结点的比较 */
 
 		/*寻找最大的子结点*/   // 此处maxPos < length 不能等于，如果等于，则maxPos+1不存在
 		if (maxPos < length && arr[maxPos] < arr[maxPos + 1])
